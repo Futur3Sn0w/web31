@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #mplayer {
+            padding: 1px;
+
+            .windowborder {
+                box-shadow: inset 0 0 0 1px black;
+
+                .pick {
+                    display: none;
+                }
+            }
+
+            .fullwindowhtml {
+                background-color: #CBCBCB;
+            }
+
+            &:has(#audioFile:not(.ready)) button {
+                pointer-events: none;
+                outline: none !important;
+
+                & p {
+                    opacity: .5;
+                }
+            }
+
+            #playButton.playing {
+                pointer-events: none;
+                outline: none;
+
+                & p {
+                    opacity: .5;
+                }
+            }
+
+            &:has(#audioFile.ready) {
+                button:not(#playButton):not(#stopButton) {
+                    pointer-events: none;
+
+                    & p {
+                        opacity: .5;
+                    }
+                }
+            }
+
+            &:has(#playButton.playing) #pauseButton {
+                pointer-events: all !important;
+
+                & p {
+                    opacity: 1 !important;
+                }
+            }
+
+            .time {
+                width: 380px;
+                height: 17px;
+
+                padding-left: 6px;
+                padding-top: 24px;
+                box-sizing: border-box;
+
+                display: flex;
+
+                button {
+                    width: 17px;
+                    height: 17px;
+                }
+
+                input[type="range"] {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    background: transparent;
+                    width: 348px;
+                    height: 17px;
+
+                    margin: 0 -1px;
+                    padding: 0;
+
+                    &::-webkit-slider-runnable-track,
+                    &::-moz-range-track {
+                        background: transparent;
+                        border: 1px solid black;
+                        box-sizing: border-box;
+                        height: 17px;
+                    }
+
+                    &::-webkit-slider-thumb,
+                    &::-moz-range-thumb {
+                        -webkit-appearance: none;
+                        border: none;
+                        border-radius: 0;
+                        appearance: none;
+
+                        background-color: transparent;
+                        box-sizing: border-box;
+                        border: 1px solid black;
+                        height: 17px;
+                        width: 17px;
+
+                        box-shadow:
+                            inset 1px 1px 0 white,
+                            inset -2px -2px 0 #929292;
+                    }
+
+                    &::-webkit-slider-thumb {
+                        margin-top: -8.5px;
+                    }
+                }
+            }
+
+            .buttons-row {
+                display: flex;
+                gap: 12px;
+
+                width: fit-content;
+                height: fit-content;
+
+                position: absolute;
+                bottom: 9px;
+                left: 10px;
+
+                & button {
+                    height: 28px;
+                    width: 48px;
+
+                    font-size: 22px;
+                    font-family: sans-serif !important;
+
+                    &#playButton p {
+                        transform: scaleY(70%) !important;
+                    }
+
+                    &#pauseButton p {
+                        transform: scaleY(110%) translateY(1px) !important;
+                    }
+
+                    &#stopButton p {
+                        transform: scaleX(115%) translateY(1px) !important;
+                    }
+
+                    &#ejectButton p {
+                        transform: scaleX(110%) scaleY(90%) !important;
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contextMenu fileMenu" for="file">
+        <div class="menuItem" item="fileOpen" name="Open..." onclick="$('#audioFile').click()"></div>
+        <div class="sep"></div>
+        <div class="menuItem" item="fileExit" name="Exit"></div>
+    </div>
+
+    <div class="contextMenu helpMenu" for="help">
+        <div class="menuItem" item="helpAbout" name="About Media Player..."></div>
+    </div>
+
+    <div class="time">
+        <button class="kick kick-L small">
+            <p style="transform: scaleX(70%) rotate(180deg) translateY(1px);">➡</p>
+        </button>
+        <input type="range" id="timeSlider" style="width: 300px;" min="0" max="100" value="0">
+        <button class="kick kick-R small">
+            <p style="transform: scaleX(70%);">➡</p>
+        </button>
+    </div>
+
+    <div class="buttons-row">
+        <button id="playButton">
+            <p>▶</p>
+        </button>
+        <button id="pauseButton">
+            <p>⏸</p>
+        </button>
+        <button id="stopButton">
+            <p>◾</p>
+        </button>
+        <button id="ejectButton">
+            <p>⏏</p>
+        </button>
+    </div>
+
+    <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+
+    <audio id="hiddenAudio" style="display: none;"></audio>
+
+    <script>
+        let clearFile;
+        $(document).ready(function () {
+            const audio = document.getElementById('hiddenAudio');
+            const playButton = $('#playButton');
+            const pauseButton = $('#pauseButton');
+            const stopButton = $('#stopButton');
+            const timeSlider = $('#timeSlider');
+
+            let audioSource;
+            let audioContext;
+
+            $(document).on('change', '#audioFile', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        audio.src = e.target.result;
+                        audio.onloadedmetadata = function () {
+                            timeSlider.attr('max', audio.duration);
+                        };
+                        $('#audioFile').addClass('ready');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            function clearFile() {
+                $('#audioFile').removeClass('ready');
+                var $newInput = $('#audioFile').clone(true); // Clone with event handlers
+                $('#audioFile').replaceWith($newInput);
+                timeSlider.val(0);
+            }
+
+            playButton.on('click', function () {
+                audio.play();
+                $(this).addClass('playing')
+                $('#pauseButton').focus();
+            });
+
+            pauseButton.on('click', function () {
+                audio.pause();
+                $('#playButton').removeClass('playing').focus();
+            });
+
+            stopButton.on('click', function () {
+                audio.pause();
+                audio.currentTime = 0;
+                timeSlider.val(0);
+                $('#playButton').removeClass('playing').focus();
+            });
+
+            audio.addEventListener('timeupdate', function () {
+                timeSlider.val(audio.currentTime);
+            });
+
+            timeSlider.on('input', function () {
+                audio.currentTime = timeSlider.val();
+            });
+        });
+    </script>
+</body>
+
+</html>

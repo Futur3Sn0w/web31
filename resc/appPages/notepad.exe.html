@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        textarea {
+            padding: 5px;
+            width: 100%;
+            height: 100%;
+            resize: none;
+            border: none;
+            outline: none;
+            font-family: 'DOS', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contextMenu fileMenu" for="file">
+        <div class="menuItem" item="fileNew" name="New"></div>
+        <div class="menuItem" item="fileOpen" name="Open..."></div>
+        <div class="menuItem" item="fileSave" name="Save"></div>
+        <div class="menuItem" item="fileSaveAs" name="Save As..."></div>
+        <!-- <div class="menuItem" item="filePrint" name="Print"></div> -->
+        <!-- <div class="menuItem" item="filePageSetup" name="Page Setup..."></div> -->
+        <!-- <div class="menuItem" item="filePrintSetup" name="Print Setup..."></div> -->
+        <div class="sep"></div>
+        <div class="menuItem" item="fileExit" name="Exit"></div>
+    </div>
+
+    <div class="contextMenu editMenu" for="edit">
+        <!-- <div class="menuItem" item="editUndo" name="Undo" altkey="Ctrl+Z"></div> -->
+        <!-- <div class="sep"></div> -->
+        <!-- <div class="menuItem" item="editCut" name="Cut" altkey="Ctrl+O"></div> -->
+        <!-- <div class="menuItem" item="editCopy" name="Copy" altkey="Ctrl+C"></div> -->
+        <!-- <div class="menuItem" item="editPaste" name="Paste" altkey="Ctrl+V"></div> -->
+        <!-- <div class="menuItem" item="editDelete" name="Delete" altkey="Del"></div> -->
+        <!-- <div class="sep"></div> -->
+        <div class="menuItem" item="editSelectAll" name="Select All"></div>
+        <div class="menuItem" item="editTimeDate" name="Time/Date" altkey="F5"></div>
+        <!-- <div class="sep"></div> -->
+        <!-- <div class="menuItem" item="editWordWrap" name="Word Wrap"></div> -->
+    </div>
+
+    <div class="contextMenu searchMenu" for="search">
+        <!-- <div class="menuItem" item="searchFind" name="Find..."></div> -->
+        <!-- <div class="menuItem" item="searchFindNext" name="Find Next" altkey="F3"></div> -->
+    </div>
+
+    <div class="contextMenu helpMenu" for="help">
+        <!-- <div class="menuItem" item="help" name="Contents"></div> -->
+        <!-- <div class="menuItem" item="help" name="Search for Help on..."></div> -->
+        <!-- <div class="menuItem" item="help" name="How to Use Help"></div> -->
+        <!-- <div class="sep"></div> -->
+        <div class="menuItem" item="helpAbout" name="About Notepad..."></div>
+    </div>
+    <textarea class="notepadTextField"></textarea>
+
+    <script>
+        $('.menuItem[item="editTimeDate"]').on('mouseup', function () {
+            const now = new Date();
+
+            // Format time (HH:MM AM/PM)
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            const timeString = `${hours}:${minutes}${ampm}`;
+
+            // Format date (M/D/YY)
+            const month = now.getMonth() + 1; // Months are 0-indexed
+            const day = now.getDate();
+            const year = String(now.getFullYear()).slice(-2); // Get last two digits of the year
+            const dateString = `${month}/${day}/${year}`;
+
+            const timestamp = `${timeString}   ${dateString}`;
+
+            const textbox = $('.notepadTextField')[0]; // Get the DOM element from jQuery object
+            if (textbox) {
+                const startPos = textbox.selectionStart;
+                const endPos = textbox.selectionEnd;
+                const currentValue = textbox.value;
+
+                textbox.value = currentValue.substring(0, startPos) + timestamp + currentValue.substring(endPos);
+
+                // Move the cursor to the end of the inserted timestamp
+                textbox.selectionStart = textbox.selectionEnd = startPos + timestamp.length;
+                textbox.focus();
+            }
+        })
+
+        $('.menuItem[item="fileOpen"]').on('mouseup', function () {
+            const textareaText = $('.notepadTextField').val().trim();
+
+            if (textareaText !== '') {
+                if (!confirm("The text in the file has changed. Do you want to save the changes?")) {
+                    return; // User canceled, exit the function
+                }
+            }
+
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt';
+
+            input.onchange = event => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        $('.notepadTextField').val(e.target.result);
+                        // Update window title
+                        let notepadTitle = $('#notepad').find('.windowtitle').text();
+                        const fileName = file.name;
+                        if (notepadTitle) {
+                            // Remove existing filename if it exists
+                            notepadTitle = notepadTitle.replace(/ - \(.*\)$/, '');
+                            $('#notepad').find('.windowtitle').text(notepadTitle + " - (" + fileName + ")");
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        });
+
+        $('.menuItem[item="fileSave"]').on('click', function () {
+            const text = $('.notepadTextField').val().trim(); // Trim whitespace
+
+            if (text === '') {
+                alert("You have not entered any text to be saved. Type some text, and then try again.");
+                return; // Exit the function if textarea is empty
+            }
+
+            let filename = 'notepad.txt'; // Default filename
+
+            if (text.length > 0) {
+                let firstEightChars = '';
+                let charCount = 0;
+                for (let i = 0; i < text.length && charCount < 8; i++) {
+                    if (text[i] !== ' ') {
+                        firstEightChars += text[i].toUpperCase();
+                        charCount++;
+                    }
+                }
+                if (firstEightChars.length > 0) {
+                    filename = firstEightChars + '.txt';
+                }
+            }
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        $('.menuItem[item="fileExit"]').on('click', function () {
+            const text = $('.notepadTextField').val();
+            if (text.trim() !== '') { // Check if the textarea has non-whitespace text
+                if (confirm("The text in the file has changed. Do you want to save the changes?")) {
+                    // User clicked "OK" (Yes) - close the window
+                } else {
+                    // User clicked "Cancel" (No) - do nothing, keep the window open
+                    $('#notepad').remove();
+                }
+            } else {
+                // Textarea is empty, close the window without confirmation
+                $('#notepad').remove();
+            }
+        })
+
+        $('.notepadTextField').on('input', function () { // Use 'input' instead of 'keypress'
+            let notepadTitle = $('#notepad').find('.windowtitle').text();
+            if (notepadTitle && !notepadTitle.includes(" - (Untitled)")) {
+                $('#notepad').find('.windowtitle').text(notepadTitle + " - (Untitled)");
+            }
+        });
+    </script>
+</body>
+
+</html>

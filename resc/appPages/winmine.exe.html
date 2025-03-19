@@ -1,0 +1,817 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #game_window {
+            min-width: 200px;
+            margin: auto;
+            margin: 0;
+
+            background-color: rgb(184, 184, 184);
+            width: 100%;
+        }
+
+        #get_help {
+            position: relative;
+            border: solid blue 2px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            min-width: 200px;
+            max-width: 300px;
+            margin: auto;
+            margin-top: 15px;
+            background-color: rgb(233, 230, 211);
+            width: fit-content;
+        }
+
+        #instructions {
+            padding: 10px;
+        }
+
+        ul {
+            padding-left: 20px;
+            padding-right: 5px;
+        }
+
+        li {
+            font-size: small;
+            cursor: normal;
+        }
+
+        #icon {
+            max-width: 20px;
+            margin-right: 5px;
+            margin-top: 1px;
+            float: left;
+        }
+
+        #cross,
+        #help_cross {
+            margin-right: -3px;
+        }
+
+        #white_margin {
+            border-top: solid white 4px;
+            border-left: solid white 3px;
+            border-right: solid #84888C 3px;
+            border-bottom: solid #84888C 4px;
+        }
+
+        #game_panel {
+            background-color: rgb(184, 184, 184);
+            margin: 5px;
+            margin-bottom: 0;
+            padding-bottom: 5px;
+        }
+
+        #game_menu {
+            border-top: solid rgb(117, 117, 117) 2px;
+            border-left: solid rgb(117, 117, 117) 2px;
+            border-bottom: solid white 2px;
+            border-right: solid white 2px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        #flags_left>img,
+        #timer>img {
+            position: relative;
+            height: 25px;
+            margin-bottom: -2.5px;
+        }
+
+        #flags_left>img:not(:first-of-type),
+        #timer>img:not(:first-of-type) {
+            margin-left: -2.5px;
+        }
+
+        .smiley_button {
+            background-color: rgb(192, 192, 192);
+            border-left: solid white 2px;
+            border-top: solid white 2px;
+            border-bottom: solid rgb(117, 117, 117) 2px;
+            border-right: solid rgb(117, 117, 117) 2px;
+            margin: 0;
+            padding: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 25px;
+            height: 25px;
+            box-sizing: border-box;
+
+            &:active {
+                border-left: solid rgb(117, 117, 117) 2px;
+                border-top: solid rgb(117, 117, 117) 2px;
+                border-bottom: solid white 2px;
+                border-right: solid white 2px;
+
+                &>img {
+                    transform: translate(0.5px, 0.5px);
+                }
+            }
+        }
+
+        #grid {
+            border-top: solid rgb(117, 117, 117) 2px;
+            border-left: solid rgb(117, 117, 117) 2px;
+            border-bottom: solid white 2px;
+            border-right: solid white 2px;
+            border-collapse: collapse;
+            width: 100%;
+            height: 184px;
+            margin-top: 5px;
+        }
+
+        /* common for all buttons on the field */
+        .field_button {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            border-top: solid white 2px;
+            border-left: solid white 2px;
+            border-bottom: solid rgb(117, 117, 117) 2px;
+            border-right: solid rgb(117, 117, 117) 2px;
+            background-color: rgb(192, 192, 192);
+
+            &:active {
+                border-top: solid rgb(117, 117, 117) 1px;
+                border-left: solid rgb(117, 117, 117) 1px;
+                border-bottom: solid transparent 3px;
+                border-right: solid transparent 3px;
+            }
+        }
+
+        td {
+            padding: 0px;
+        }
+
+        .field_button_mine,
+        .field_button_mine:active {
+            background-image: url("../winmine/mine.png");
+            background-size: 15px;
+            background-repeat: no-repeat;
+            background-position: center;
+            border: none;
+            border-left: solid rgb(117, 117, 117) 1px;
+            border-top: solid rgb(117, 117, 117) 1px;
+        }
+
+        .field_button_flagged {
+            background-image: url("../winmine/flag.png");
+            background-size: 20px;
+            background-position: center;
+        }
+
+        .field_button_empty {
+            background-color: rgb(192, 192, 192);
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-left: solid rgb(117, 117, 117) 1px;
+            border-top: solid rgb(117, 117, 117) 1px;
+        }
+
+        .field_button_img {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: rgb(192, 192, 192);
+            border: none;
+            border-left: solid rgb(117, 117, 117) 1px;
+            border-top: solid rgb(117, 117, 117) 1px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .difficulty {
+            display: inline-block;
+            border: none;
+        }
+
+        .checkmark {
+            background-image: url('../winmine/checked.png');
+            background-position-x: 3px;
+            background-position-y: center;
+            background-size: 7px;
+            background-repeat: no-repeat;
+        }
+
+        #unlucky {
+            color: blue;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="iframe">
+    <div id="game_window">
+
+        <div id="difficulty_dropdown" class="contextMenu gameMenu" for="game">
+            <div class="menuItem" onclick="setDifficulty(difficulty_presets.easy)" name="Easy"></div>
+            <div class="menuItem" onclick="setDifficulty(difficulty_presets.intermediate)" name="Intermediate"></div>
+            <div class="menuItem" onclick="setDifficulty(difficulty_presets.expert)" name="Expert"></div>
+        </div>
+
+        <div id="white_margin">
+            <div id="game_panel">
+                <div id="game_menu">
+                    <div id="flags_left">
+                        <img id="flags0" src="../winmine/digits/digit0.png">
+                        <img id="flags1" src="../winmine/digits/digit1.png">
+                        <img id="flags2" src="../winmine/digits/digit0.png">
+                    </div>
+                    <button onclick="resetGame()" class="smiley_button">
+                        <img id="smiley" src="../winmine/ok.png">
+                    </button>
+                    <div id="timer">
+                        <img id="timer0" src="../winmine/digits/digit0.png">
+                        <img id="timer1" src="../winmine/digits/digit0.png">
+                        <img id="timer2" src="../winmine/digits/digit0.png">
+                        <script>
+                            let running = false
+                            timer()
+
+                            // t represents: hundreds, tens and ones
+                            let t = [0, 0, 0]
+
+                            function timer() {
+                                if (running) {
+                                    t[2]++
+                                    if (t[2] == 10) {
+                                        t[2] = 0
+                                        t[1]++
+                                        if (t[1] == 10) {
+                                            t[1] = 0
+                                            t[0]++
+                                            if (t[0] == 10) {
+                                                t[0] = 0
+                                            }
+                                        }
+                                    }
+
+                                    let path = "../winmine/digits/digit"
+                                    let ext = ".png"
+
+                                    for (let i = 0; i < 3; i++) {
+                                        document.getElementById("timer" + i).src = path + t[i] + ext
+                                    }
+                                }
+                                setTimeout(timer, 1000)
+                            }
+
+                            function stopTimer() {
+                                running = false
+                            }
+
+                            function resetTimer() {
+                                stopTimer()
+                                let path = "../winmine/digits/digit0.png"
+
+                                t = [0, 0, 0]
+
+                                for (let i = 0; i < 3; i++) {
+                                    document.getElementById("timer" + i).src = path
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+
+                <table id="grid"></table>
+
+                <script>
+                    function displayGrid() {
+                        let table = document.getElementById('grid')
+
+                        // clear the table
+                        if (table.hasChildNodes) {
+                            table.innerHTML = ""
+                        }
+
+                        for (let i = 0; i < difficulty.rows; i++) {
+                            let t_row = document.createElement('tr')
+                            for (let j = 0; j < difficulty.cols; j++) {
+                                let t_data = document.createElement('td')
+                                let button = document.createElement('button')
+
+                                button.classList.add("field_button")
+                                if (playing) {
+                                    button.setAttribute("onclick", "clickButton(" + i + ", " + j + ")")
+                                    button.setAttribute("oncontextmenu", "flagButton(" + i + ", " + j + "); return false;")
+                                    button.setAttribute("onmousedown", 'smiley("../winmine/wow.png")')
+                                    button.setAttribute("onmouseup", 'smiley("../winmine/ok.png")')
+                                }
+
+                                if (grid[i][j].isFlagged) {
+                                    button.classList.add("field_button_flagged")
+                                }
+
+                                if (grid[i][j].isClicked) {
+                                    if (grid[i][j].isMine) {
+                                        button.classList.add("field_button")
+                                        button.classList.add("field_button_mine")
+                                        if (grid[i][j].isExplodedMine) {
+                                            button.setAttribute("style", "background-color: red")
+                                        }
+                                    }
+                                    else if (grid[i][j].numNeighborMines == 0) {
+                                        button.classList.remove("field_button")
+                                        button.classList.add("field_button_empty")
+
+                                    }
+                                    if (grid[i][j].numNeighborMines > 0) {
+                                        button.classList.remove("field_button")
+                                        // add picture to button
+                                        let img = document.createElement('img')
+                                        img.src = "../winmine/num_of_neighbors/open" + grid[i][j].numNeighborMines + ".png"
+                                        button.classList.add("field_button_img")
+                                        button.appendChild(img)
+                                    }
+                                }
+
+                                t_data.appendChild(button)
+                                t_row.appendChild(t_data)
+                            }
+                            table.appendChild(t_row)
+                        }
+                    }
+
+                    /**
+                     * Change the picture of similey face
+                     * @param {string} img Path to image
+                     */
+                    function smiley(img) {
+                        document.getElementById("smiley").src = img
+                    }
+
+                    /**
+                     * Opens a dropdown for selecting difficulty
+                     */
+                    function enableDropdown() {
+                        let dropdown = document.getElementById("difficulty_dropdown")
+                        dropdown.classList.toggle("show")
+                        let buttons = dropdown.querySelectorAll("button")
+                        for (const i in buttons) {
+                            if (Object.hasOwnProperty.call(buttons, i)) {
+                                const element = buttons[i]
+                                if (element.innerHTML == "Intermediate" && window.innerWidth < 375 || element.innerHTML == "Expert" && window.innerWidth < 684) {
+                                    element.disabled = true
+                                }
+                                else {
+                                    element.disabled = false
+                                }
+
+                                if (element.innerHTML == difficulty.name) {
+                                    element.classList.add("checkmark")
+                                } else {
+                                    element.classList.remove("checkmark")
+                                }
+                            }
+                        }
+                    }
+
+                    /**
+                     * Close the dropdown if the user clicks outside of it
+                     * Source: https://www.w3schools.com/howto/howto_js_dropdown.asp
+                     */
+                    window.onclick = function (event) {
+                        if (!event.target.matches('#difficulty_button')) {
+                            let dropdowns = document.getElementsByClassName("dropdown-content")
+                            for (let i = 0; i < dropdowns.length; i++) {
+                                let openDropdown = dropdowns[i]
+                                if (openDropdown.classList.contains('show')) {
+                                    openDropdown.classList.remove('show')
+                                }
+                            }
+                        }
+                    }
+
+                    /**
+                     * Changes to easier difficulty if the window is too small
+                     * Called automatically when the window is resized
+                     */
+                    window.onresize = function () {
+                        if (window.innerWidth < difficulty.width) {
+                            switch (difficulty.name) {
+                                case "Intermediate":
+                                    difficulty = difficulty_presets.easy
+                                    break
+                                case "Expert":
+                                    difficulty = difficulty_presets.intermediate
+                            }
+                            resetGame()
+                        }
+                    }
+
+                    /**
+                     * Pauses the game and hides the game window
+                     * Called when the user clicks the minimize button or taskbar icon
+                     */
+                    function toggleWindowVisibility() {
+                        let window = document.getElementById("game_window")
+                        if (window.classList.contains("hidden")) {
+                            running = false
+                        } else {
+                            if (playing && !firstClick) { // resumes the game if it was running before
+                                running = true
+                            } else if (playing && firstClick) { // ensures the window is correctly displayed after it is reopened
+                                resetGame()
+                            }
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div id="get_help" class="hidden">
+        <div id="instructions">
+            <h3 style="margin-top: 1px; margin-bottom: 0px;">Instructions</h3>
+            <ul>
+                <li>
+                    The objective of Minesweeper is to clear a rectangular board containing hidden "mines" or bombs
+                    without detonating any of them.
+                </li>
+                <li>
+                    To start, click on any square on the board. If that square contains a mine, the game is over. If it
+                    does not contain a mine, a number will appear indicating how many mines are in the eight adjacent
+                    squares.
+                </li>
+                <li>
+                    Use the numbers to deduce the location of mines. For example, if a square has a "1" on it, there is
+                    one mine in one of the eight squares around it.
+                </li>
+                <li>
+                    Right-click on a square to flag it if you think it contains a mine. Right-click again to unflag it.
+                </li>
+                <li>
+                    The game is won when all non-mine squares have been cleared.
+                </li>
+                <li>
+                    <a id="unlucky" onclick="feelingLucky()"><u>Feeling lucky?</u></button>
+                </li>
+            </ul>
+            <a href="https://github.com/urluur/minesweeper-js">
+                <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub"
+                    style="width: 20px; float:right; margin-top: -19;">
+            </a>
+        </div>
+    </div>
+    <script>
+        $(document).click(function (event) {
+            if (!$(event.target).is('.contextMenu')) {
+                $('.contextMenu').removeClass('show');
+            }
+        });
+    </script>
+
+    <script>
+        let difficulty_presets = {
+            easy: {
+                rows: 9,
+                cols: 9,
+                mines: 10,
+                name: "Easy",
+                width: 220
+            },
+            intermediate: {
+                rows: 16,
+                cols: 16,
+                mines: 40,
+                name: "Intermediate",
+                width: 375
+            },
+            expert: {
+                rows: 16,
+                cols: 30,
+                mines: 99,
+                name: "Expert",
+                width: 684
+            }
+        }
+
+        let difficulty = difficulty_presets.easy
+        let playing = true
+        let firstClick = true
+        let unlucky = false
+
+        /**
+         * Sets difficulty of the game.
+         * Presets: easy, intermediate, expert
+         * @param {*} diff Must be one of presets (e.g. difficulty_presets.easy)
+         */
+        function setDifficulty(diff) {
+            switch (difficulty) {
+                case difficulty_presets.intermediate:
+                    if (window.innerWidth < 375) {
+                        return
+                    }
+                    break
+                case difficulty_presets.expert:
+                    if (window.innerWidth < 684) {
+                        return
+                    }
+                    break
+            }
+            difficulty = diff
+            resetGame()
+        }
+
+        /**
+         * Opens or closes the help window
+         */
+        function toggleHelp() {
+            document.getElementById("get_help").classList.toggle("hidden")
+        }
+
+        class Square {
+            constructor() {
+                this.isClicked = false
+                this.isFlagged = false
+                this.isMine = false
+                this.isExplodedMine = false
+                this.numNeighborMines = 0
+            }
+        }
+
+        /**
+         * Creates a grid of Squares at the start of the game
+         */
+        function createGrid() {
+            for (let i = 0; i < difficulty.rows; i++) {
+                grid[i] = []
+                for (let j = 0; j < difficulty.cols; j++) {
+                    grid[i][j] = new Square
+                }
+            }
+        }
+
+        /**
+         * Places mines at random squares when the game starts
+         */
+        function placeMines() {
+            let placedMines = 0
+            while (placedMines < difficulty.mines) {
+
+                //source: https://www.w3schools.com/js/js_random.asp
+                let x = Math.floor(Math.random() * difficulty.rows)
+                let y = Math.floor(Math.random() * difficulty.cols)
+                if (!grid[x][y].isMine) {
+                    grid[x][y].isMine = true
+                    placedMines++
+                }
+            }
+        }
+
+        /**
+         * Counts how many neighbors of a square are mines
+         */
+        function countNeighborMines() {
+            for (let i = 0; i < difficulty.rows; i++) {
+                for (let j = 0; j < difficulty.cols; j++) {
+                    if (!grid[i][j].isMine) {
+                        let neighbors = 0
+                        for (let i_offset = -1; i_offset < 2; i_offset++) {
+                            for (let j_offset = -1; j_offset < 2; j_offset++) {
+                                if (
+                                    i + i_offset >= 0 &&
+                                    i + i_offset < difficulty.rows &&
+                                    j + j_offset >= 0 &&
+                                    j + j_offset < difficulty.cols
+                                ) {
+                                    if (grid[i + i_offset][j + j_offset].isMine) {
+                                        neighbors++
+                                    }
+                                }
+                            }
+                        }
+                        grid[i][j].numNeighborMines = neighbors
+                    }
+                }
+            }
+        }
+
+        /**
+         * Reveals what's under a square
+         * @param {int} x horizontal position of the square
+         * @param {int} y vertical position of the square
+         */
+        function clickSquare(x, y) {
+            let square = grid[x][y]
+            if (!square.isClicked && !square.isFlagged) {
+                square.isFlagged = false
+                square.isClicked = true
+                if (square.numNeighborMines == 0) {
+                    for (let i_offset = -1; i_offset < 2; i_offset++) {
+                        for (let j_offset = -1; j_offset < 2; j_offset++) {
+                            if (
+                                x + i_offset >= 0 &&
+                                x + i_offset < difficulty.rows &&
+                                y + j_offset >= 0 &&
+                                y + j_offset < difficulty.cols
+                            ) {
+                                if (!square.isFlagged && !square.isMine) {
+                                    clickSquare(x + i_offset, y + j_offset)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Called when any square is clicked
+         * @param {int} x horizontal position of the button
+         * @param {int} y vertical position of the button
+         */
+        function clickButton(x, y) {
+            if (firstClick) {
+                while (unlucky != grid[x][y].isMine) {
+                    createGrid()
+                    placeMines()
+                }
+                countNeighborMines()
+                updateFlagCounter()
+                displayGrid()
+                firstClick = false
+            }
+            if (!grid[x][y].isFlagged) {
+                running = true
+                clickSquare(x, y)
+                checkLose(x, y)
+                checkWin()
+                displayGrid()
+            }
+        }
+
+        /**
+         * Checks if clicked square is a mine and ends the game
+         * @param {int} x horizontal position of the square
+         * @param {int} y vertical position of the square
+         */
+        function checkLose(x, y) {
+            if (grid[x][y].isMine) {
+                grid[x][y].isExplodedMine = true
+                document.getElementById("smiley").src = "../winmine/dead.png"
+                // reveal all mines
+                for (let i = 0; i < difficulty.rows; i++) {
+                    for (let j = 0; j < difficulty.cols; j++) {
+                        if (grid[i][j].isMine) {
+                            grid[i][j].isFlagged = false
+                            grid[i][j].isClicked = true
+                        }
+                    }
+                }
+                playing = false
+                stopTimer()
+            }
+        }
+
+        /**
+         * Checks the winning condition
+         */
+        function checkWin() {
+            if (playing && noTilesLeft()) {
+                document.getElementById("smiley").src = "../winmine/win.png"
+                for (let i = 0; i < difficulty.rows; i++) {
+                    for (let j = 0; j < difficulty.cols; j++) {
+                        let el = grid[i][j]
+                        if (el.isMine) {
+                            el.isFlagged = true
+                        }
+                    }
+                }
+                playing = false
+                stopTimer()
+            }
+        }
+
+        /**
+         * Checks if there is no mines left to click and ends the game
+         * @returns true if you won or false if game isn't finished yet
+         */
+        function noTilesLeft() {
+            for (let i = 0; i < difficulty.rows; i++) {
+                for (let j = 0; j < difficulty.cols; j++) {
+                    let el = grid[i][j]
+                    if (!el.isMine && !el.isClicked) {
+                        return false
+                    }
+                }
+            }
+            return true
+        }
+
+        /**
+         * Adds or removes flag from a square
+         * @param {int} x horizontal position of the square
+         * @param {int} y vertical position of the square
+         */
+        function flagButton(x, y) {
+            if (!grid[x][y].isClicked) {
+                grid[x][y].isFlagged = !grid[x][y].isFlagged
+                displayGrid()
+            }
+            updateFlagCounter()
+        }
+
+        /**
+         * Updates the counter to number of unflaged mines
+         */
+        function updateFlagCounter() {
+            let mines_unflagged = difficulty.mines
+            for (let i = 0; i < difficulty.rows; i++) {
+                for (let j = 0; j < difficulty.cols; j++) {
+                    if (grid[i][j].isFlagged) {
+                        mines_unflagged--
+                    }
+                }
+            }
+            let str = mines_unflagged.toString()
+
+            let mines = ["0", "0", "0"]
+            switch (str.length) {
+                case 1:
+                    mines[2] = str
+                    break
+                case 2:
+                    mines[1] = str[0]
+                    mines[2] = str[1]
+                    break
+                case 3:
+                    mines[0] = str[0]
+                    mines[1] = str[1]
+                    mines[2] = str[2]
+                    break
+                case 4: // minus symbol is lost, but thats the best we can do
+                    mines[0] = str[1]
+                    mines[1] = str[2]
+                    mines[2] = str[3]
+            }
+
+            for (let i = 0; i < 3; i++) {
+                document.getElementById("flags" + i).src = "../winmine/digits/digit" + mines[i] + ".png"
+            }
+        }
+
+        /**
+         * Makes the game impossible to win
+         */
+        function feelingLucky() {
+            unlucky = true
+            toggleHelp()
+        }
+
+        /**
+         * Starts the game
+         */
+        function startGame() {
+            playing = true
+            firstClick = true
+            createGrid()
+            placeMines()
+            countNeighborMines()
+            updateFlagCounter()
+            displayGrid()
+        }
+
+        /**
+         * Resets the game
+         */
+        function resetGame() {
+            resetTimer()
+            document.getElementById("smiley").src = "../winmine/ok.png"
+            startGame()
+        }
+
+        startGame()
+    </script>
+</body>
+
+</html>

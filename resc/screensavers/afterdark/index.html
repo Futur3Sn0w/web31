@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100vw;
+            height: 100vh;
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <iframe class="display" src="" frameborder="0"></iframe>
+    <script>
+        function getDesktopSettings() {
+            const desktopSettings = localStorage.getItem('desktop');
+            return desktopSettings ? JSON.parse(desktopSettings) : {};
+        }
+
+        function saveDesktopSettings(settings) {
+            localStorage.setItem('desktop', JSON.stringify(settings));
+        }
+
+        let desktop = getDesktopSettings();
+        desktop.applications = desktop.applications || {};
+        let afterdark = desktop.applications.afterdar || 'flying-toasters'
+        $('iframe.display').attr('src', `all/${afterdark}.html`);
+    </script>
+</body>
+
+</html>

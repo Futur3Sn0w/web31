@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #afterdar .fullwindowhtml {
+            box-sizing: border-box;
+            /* padding: 3px 4px; */
+            background-color: #C3C3C3;
+            position: relative;
+
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .area {
+            display: flex;
+            box-sizing: border-box;
+            position: absolute;
+
+            box-shadow:
+                inset 1px 1px 0 #fff,
+                inset -1px -1px 0 #828282;
+
+            &.reverse {
+                box-shadow:
+                    inset 1px 1px 0 #828282,
+                    inset -1px -1px 0 #fff;
+            }
+        }
+
+        .power.area {
+            width: 110px;
+            height: 62px;
+            top: 3px;
+            right: 4px;
+            /* margin-left: 3px; */
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .adPowerBtn {
+                width: 16px;
+                height: 28px;
+
+                background-color: #929292;
+                position: relative;
+                cursor: pointer;
+                margin-left: -11px;
+
+                box-sizing: border-box;
+                box-shadow:
+                    1px 1px 0 #fff,
+                    -1px -1px 0 #929292,
+                    inset 1px 1px 0 #000;
+
+                &::before,
+                &::after {
+                    display: flex;
+                    position: absolute;
+                    left: 22px;
+
+                    font-size: 13px;
+                }
+
+                &::before {
+                    content: 'On';
+                    top: -1px;
+                }
+
+                &::after {
+                    content: 'Off';
+                    bottom: -3px;
+                }
+
+                &:has(#adPowerChk:focus),
+                &:focus,
+                &:focus-visible,
+                &:focus-within {
+                    box-shadow:
+                        1px 1px 0 #fff,
+                        -1px -1px 0 #929292,
+                        0 0 0 1px #C3C3C3,
+                        0 0 0 2px #000,
+                        inset 1px 1px 0 #000;
+                }
+
+                & input[type=checkbox] {
+                    opacity: 0;
+                    width: 42px;
+                    height: 32px;
+                    cursor: pointer;
+
+                    position: absolute;
+                    top: -5px;
+                    left: -5px;
+
+                    &:checked~.checkbox-container {
+                        top: unset;
+                        bottom: 1px;
+                    }
+                }
+
+                & .checkbox-container {
+                    position: absolute;
+                    left: 2px;
+                    top: 3px;
+
+                    width: 13px;
+                    height: 13px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    background-color: #CBCBCB;
+
+                    box-sizing: border-box;
+                    box-shadow:
+                        inset 0 0 0 1px #000,
+                        inset -3px -3px 0 #929292,
+                        inset 2px 2px 0 #fff;
+
+                    &::after {
+                        content: '☰';
+                        box-sizing: border-box;
+                        padding-bottom: 2px;
+                        padding-right: 2px;
+                        color: #929292;
+
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+
+        .adLogo.area {
+            width: 196px;
+            height: 62px;
+            top: 3px;
+            left: 4px;
+            cursor: help;
+            z-index: 100;
+            transition: 0s;
+            overflow: hidden;
+
+            display: flex;
+            justify-content: center;
+
+            position: relative;
+
+            &::after {
+                content: '';
+                width: 100%;
+                height: 100%;
+
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                box-shadow:
+                    inset 1px 1px 0 #828282,
+                    inset -1px -1px 0 #fff
+            }
+
+            &.open {
+                width: 311px;
+                height: 319px;
+                transition: .1s;
+
+                img {
+                    margin: 0 auto;
+                    margin-bottom: auto;
+                    margin-top: 1px;
+                }
+            }
+
+            img {
+                width: 309px;
+                height: 319px;
+            }
+        }
+
+        .list.area {
+            width: 154px;
+            height: 216px;
+            left: 4px;
+            top: 68px;
+
+            .options {
+                display: flex;
+                flex-direction: column;
+                width: fit-content;
+                height: 181px;
+                overflow: scroll;
+                box-sizing: border-box;
+
+                position: absolute;
+                left: 5px;
+                bottom: 4px;
+
+                >div {
+                    display: flex;
+                    width: 125px;
+                    height: 14px;
+                    flex-shrink: 0;
+                    box-sizing: border-box;
+
+                    &:has(input:checked) {
+                        background-color: var(--dialog-blue);
+                        color: white;
+                        border: 1px dotted yellow;
+                    }
+
+                    label {
+                        width: 100%;
+                        font-size: 13px;
+                        overflow: hidden;
+
+                        p {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                            margin-top: -2px;
+                        }
+                    }
+
+                    input {
+                        margin: 0;
+                        padding: 0;
+                        appearance: none;
+                    }
+                }
+            }
+        }
+
+        .selectedOptions.area {
+            width: 152px;
+            height: 216px;
+            right: 4px;
+            top: 68px;
+
+            &>div {
+                width: 146px;
+                height: fit-content;
+
+                position: absolute;
+                left: 3px;
+
+                display: flex;
+                box-shadow:
+                    inset 1px 1px 0 #828282,
+                    inset -1px -1px 0 #fff;
+
+                &.demoArea {
+                    bottom: 3px;
+                    height: 31px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                &.optionsArea {
+                    height: 176px;
+                    top: 3px;
+                }
+            }
+
+            #previewScreensaver {
+                display: flex;
+                width: 56px;
+                height: 20px;
+                font-weight: bold;
+            }
+        }
+
+        .compLogo.area {
+            width: 37px;
+            height: 36px;
+            left: 4px;
+            bottom: 3px;
+
+            box-sizing: border-box;
+            padding-top: 2px;
+            padding-left: 2px;
+
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
+        .credits.area {
+            width: 245px;
+            height: 36px;
+            right: 28px;
+            bottom: 3px;
+
+            p {
+                font-size: 13px;
+                margin: 0;
+                padding: 3px 4px;
+                box-sizing: border-box;
+            }
+        }
+
+        .helpBtn {
+            width: 21px;
+            height: 36px;
+
+            position: absolute;
+            bottom: 3px;
+            right: 4px;
+
+            font-size: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="adLogo area reverse">
+        <img src="resc/screensavers/afterdark/img/ad_logo_full.png" alt="">
+    </div>
+    <div class="power area">
+        <label for="adPowerChk" class="main adPowerBtn" id="adPowerLbl">
+            <input type="checkbox" name="adPower" id="adPowerChk">
+            <span class="checkbox-container"></span>
+        </label>
+    </div>
+    <div class="list area"></div>
+    <div class="selectedOptions area">
+        <div class="optionsArea"></div>
+        <div class="demoArea">
+            <button id="previewScreensaver" class="previewScreensaverBtn">Demo</button>
+        </div>
+    </div>
+    <div class="compLogo area">
+        <img src="resc/screensavers/afterdark/img/berksys_logo.png" alt="">
+    </div>
+    <div class="credits area">
+        <p>By B. Covey, J. Kowalski & P. Meyer. <br>© 1994 Berkeley Systems, Inc.</p>
+    </div>
+    <button class="helpBtn">?</button>
+
+    <script>
+        function createRadioDivs(dataArray) {
+            var $container = $('<div class="options">');
+
+            $.each(dataArray, function (index, value) {
+                var $div = $('<div>');
+                var formattedLabelText = value.replace(/-/g, ' ').toLowerCase().split(' ').map(function (word) {
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                }).join(' ');
+                var $label = $('<label>').html(`<p>${formattedLabelText}</p>`).attr('for', `ad-${value}`);
+                var $radio = $('<input>').attr({
+                    type: 'radio',
+                    name: 'afterDarOptions',
+                    id: `ad-${value}`,
+                    value: value
+                });
+
+                $div.append($radio).append($label);
+                $container.append($div);
+            });
+
+            return $container;
+        }
+
+        var fileNames = [
+            "bouncing-ball",
+            "fade-out",
+            "fish",
+            "flying-toasters",
+            "globe",
+            "hard-rain",
+            "logo",
+            "messages",
+            "messages2",
+            "rainstorm",
+            "spotlight",
+            "warp"
+        ];
+
+        $(document).on('click', '.adPowerBtn', function () {
+            $('#adPowerChk').focus();
+            if ($('#adPowerChk').is(':checked')) {
+                $('#afterdar .previewScreensaverBtn').prop('disabled', true);
+            } else {
+                $('#afterdar .previewScreensaverBtn').prop('disabled', false);
+            }
+        });
+
+        $(document).on('click', '.adLogo.area', function () {
+            $('.adLogo.area').toggleClass('open');
+        });
+
+        $(document).on('change', 'input[name="afterDarOptions"]', function () {
+            let choice = $(this).attr('value');
+            let desktop = getDesktopSettings();
+            desktop.applications = desktop.applications || {};
+            desktop.applications.afterdar = choice;
+            saveDesktopSettings(desktop);
+        });
+
+        $(document).ready(function () {
+            var radioDivs = createRadioDivs(fileNames);
+            $('.list.area').append(radioDivs);
+
+            let desktop = getDesktopSettings();
+            let adChoice = desktop.applications && desktop.applications.afterdar;
+
+            if (adChoice) {
+                $(`input[value="${adChoice}"]`).prop('checked', true);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #setup {
+            padding: 1px;
+
+            .windowborder {
+                box-shadow: inset 0 0 0 1px black;
+
+                .pick {
+                    display: none;
+                }
+            }
+
+            .contextMenu {
+                margin-top: -2px;
+                margin-left: -2px;
+            }
+
+            .windowControlmenu {
+                margin-top: -1px;
+                margin-left: -2px;
+            }
+
+            .fullwindowhtml {
+                display: flex;
+                align-items: center;
+
+                box-sizing: border-box;
+                padding-left: 15px;
+            }
+
+            .info {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+
+                font-size: 11px;
+                font-weight: bold;
+                width: max-content;
+
+                & .infoLine {
+                    display: flex;
+                    position: relative;
+
+                    p {
+                        margin: 0;
+                        padding: 0;
+
+                        position: absolute;
+                        left: 90px;
+                        width: max-content;
+                    }
+
+                    &::before {
+                        content: attr(name);
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contextMenu optionsMenu" for="options">
+        <div class="menuItem" item="fileExit" name="Exit"></div>
+    </div>
+
+    <div class="contextMenu helpMenu" for="help">
+        <div class="menuItem" item="helpAbout" name="About Setup..."></div>
+    </div>
+
+    <div class="info">
+        <div class="infoLine" name="Display:">
+            <p id="displayInfo">some actual information</p>
+        </div>
+        <div class="infoLine" name="Keyboard:">
+            <p>more information</p>
+        </div>
+        <div class="infoLine" name="Mouse:">
+            <p>Microsoft, or IBM PS/2</p>
+        </div>
+        <div class="infoLine" name="Network:">
+            <p id="networkInfo">can you believe it? information!</p>
+        </div>
+    </div>
+
+    <script>
+        $('.menuItem[item="run"]').on('mouseup', function () {
+        })
+        let windowRes = `${$(document).width()}x${$(document).height()}`;
+
+        function displayNetworkInfo() {
+            let networkType = 'No network installed';
+            let publicIp = "Fetching...";
+
+            // Get network connection type (navigator.connection)
+            if (navigator.connection) {
+                networkType = navigator.connection.effectiveType;
+            }
+
+            // Get public IP address (using a third-party API)
+            $.getJSON("https://api.ipify.org?format=json", function (data) {
+                publicIp = data.ip;
+                updateDisplay(networkType, publicIp);
+            }).fail(function () {
+                publicIp = "";
+                updateDisplay(networkType, publicIp);
+            });
+
+            //initial display while waiting for ip.
+            updateDisplay(networkType, publicIp);
+        }
+
+        function updateDisplay(type, ip) {
+            let ipDisplay = ` - ${ip}`;
+            if (ipDisplay == ' - ') {
+                ipDisplay = ''
+            }
+
+            if (type == 'Unknown' || type.toUpperCase() == 'NO NETWORK INSTALLED') {
+                $("#networkInfo").text('No network installed');
+            } else {
+                $("#networkInfo").text(type.toUpperCase() + ipDisplay);
+            }
+
+        }
+
+        function displayGraphicsInfo() {
+            let renderer
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+                if (!gl) {
+                    renderer = ''
+                    return;
+                }
+
+                renderer = gl.getParameter(gl.RENDERER);
+
+            } catch (error) {
+                renderer = ''
+            }
+            $("#displayInfo").text(renderer.replace(', or similar', '') + " " + windowRes);
+        }
+
+        $(document).ready(function () {
+            displayGraphicsInfo();
+            displayNetworkInfo();
+        })
+    </script>
+</body>
+
+</html>

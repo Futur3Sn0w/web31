@@ -1,0 +1,528 @@
+/* Background/wallpaper surface */
+
+.back {
+    position: absolute;
+    z-index: 0 !important;
+    background-color: #C0C4C8;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    & * {
+        pointer-events: none;
+    }
+
+    & .patternLayer {
+        width: 100%;
+        height: 100%;
+
+        background-size: 8px 8px;
+        background-repeat: repeat;
+        image-rendering: pixelated;
+
+        &[pattern='none'] {
+            display: none;
+        }
+    }
+
+    &:has(.imgLayer:not([pattern="none"])) .patternLayer {
+        display: none;
+    }
+
+    & .imgLayer {
+        width: 100%;
+        height: 100%;
+
+        background-repeat: repeat;
+        image-rendering: pixelated;
+
+        &.center {
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        &[pattern='none'] {
+            display: none;
+        }
+    }
+}
+
+/* Screen saver */
+
+.screenSaver {
+    width: 100vw;
+    height: 100vh;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000000000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    & .ssEmbed {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        pointer-events: none;
+
+        margin: 0;
+        padding: 0;
+        border: none;
+        outline: none;
+        appearance: none;
+    }
+}
+
+/* Minimized apps tray */
+
+.minimizedApps {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+}
+
+/* Windows */
+.window {
+    padding: 4px;
+    background-color: black;
+    overflow: visible;
+    box-sizing: border-box;
+
+    position: relative;
+
+    &#progman {
+        overflow: hidden;
+    }
+
+    &.freeze {
+        .fullwindowhtml {
+            pointer-events: none !important;
+        }
+    }
+
+    &.selectedwindow {
+        .windowheader {
+            background-color: var(--dialog-blue);
+            color: white;
+        }
+    }
+
+    &:not(.selectedwindow) {
+
+        & iframe {
+            pointer-events: none;
+        }
+
+        &.static .windowborder {
+            box-shadow:
+                inset 0 0 0 1px black,
+                inset 0 0 0 4px white,
+                inset 0 0 0 5px white;
+
+            & .pick {
+                display: none;
+            }
+        }
+    }
+
+    &.tempHide {
+        display: none;
+    }
+
+    &.maximized {
+        position: fixed;
+        margin: 0;
+        padding: 0;
+
+        &>.windowborder {
+            display: none;
+        }
+
+        & .windowButton.maximize i::after {
+            content: '▼';
+            margin-top: -4px;
+        }
+
+        & .windowControlMenu {
+            top: 20px;
+            left: 0px;
+        }
+
+        & .appgroup.maximized {
+            max-height: calc(100% - 21px);
+            top: 41px !important;
+            padding: 0;
+        }
+    }
+
+    &:has(.window.selectedwindow) {
+        .windowheader {
+            background-color: var(--dialog-blue);
+            color: white;
+        }
+    }
+
+    &:has(.appgroup.maximized) {
+        .windowmenubar {
+            box-sizing: border-box;
+            padding-left: 21px;
+        }
+    }
+
+    &.appgroup {
+        & .windowControlBtn::before {
+            width: 8px;
+        }
+
+        &:not(.maximized) .windowButton.maximize i::after {
+            content: none !important;
+        }
+
+        &.maximized {
+            max-height: calc(100% - 25px);
+            top: 45px !important;
+            padding: 4px;
+            padding-top: 0;
+
+            background-color: transparent;
+
+            & .windowborder {
+                display: none;
+            }
+
+            & .windowButton.minimize {
+                display: none;
+            }
+
+            & .windowheader {
+                background-color: transparent;
+                height: 0;
+                align-items: flex-end;
+
+                /* & .windowbuttons,
+            & .windowControlBtn {
+                margin-top: -20px;
+            } */
+
+                & .windowtitle {
+                    display: none;
+                }
+            }
+
+            & .contextMenu {
+                margin-top: -20px;
+            }
+        }
+    }
+
+    &.static .windowborder {
+        width: calc(100% + 2px);
+        height: calc(100% + 2px);
+
+        top: -1px;
+        left: -1px;
+        box-shadow:
+            inset 0 0 0 1px black,
+            inset 0 0 0 4px var(--dialog-blue),
+            inset 0 0 0 5px white;
+
+        & .pick {
+            display: none;
+        }
+    }
+
+    &.noresize {
+        padding: 1px;
+
+        .windowborder {
+            box-shadow: inset 0 0 0 1px black;
+
+            .pick {
+                display: none;
+            }
+        }
+    }
+
+    & .windowborder {
+        width: 100%;
+        height: 100%;
+
+        box-sizing: border-box;
+
+        position: absolute;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+
+        box-shadow:
+            inset 0 0 0 1px black,
+            inset 0 0 0 3px lightgrey,
+            inset 0 0 0 4px black;
+
+        & .pick {
+            width: 1px;
+            height: 1px;
+            background-color: black;
+
+            display: flex;
+            position: absolute;
+
+            &.side_t,
+            &.side_b {
+                height: 2px;
+            }
+
+            &.side_r,
+            &.side_l {
+                width: 2px;
+            }
+
+            &.side_t.pos_l {
+                top: 1px;
+                left: 24px;
+            }
+
+            &.side_t.pos_r {
+                top: 1px;
+                right: 23px;
+            }
+
+            &.side_r.pos_t {
+                right: 1px;
+                top: 24px;
+            }
+
+            &.side_r.pos_b {
+                right: 1px;
+                bottom: 24px;
+            }
+
+            &.side_b.pos_l {
+                bottom: 1px;
+                left: 24px;
+            }
+
+            &.side_b.pos_r {
+                bottom: 1px;
+                right: 23px;
+            }
+
+            &.side_l.pos_t {
+                left: 1px;
+                top: 24px;
+            }
+
+            &.side_l.pos_b {
+                left: 1px;
+                bottom: 24px;
+            }
+        }
+    }
+
+    & .windowControlMenu {
+        display: flex;
+    }
+
+    &:has(>.windowControlMenu) .windowControlBtn {
+        background-color: #84888C;
+
+        &::before {
+            border-color: white;
+            box-shadow: 1px 1px 0 #C0C4C8;
+            background-color: black;
+        }
+    }
+
+    /* Window contents */
+    & .windowinner {
+        height: calc(100% - 21px);
+        width: 100%;
+        overflow: hidden;
+        background-color: white;
+
+        & .fullwindowhtml {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+
+            margin: 0;
+            padding: 0;
+            border: none;
+            appearance: none;
+        }
+    }
+
+    & .windowmenubar+.windowinner {
+        height: calc(100% - 41px) !important;
+    }
+}
+
+.windowheader {
+    background-color: #FCFCFC;
+    color: #000000;
+    border-bottom: 1px solid black;
+    font-size: 14px;
+    height: 20px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & .windowButton {
+        width: 20px;
+        height: 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        appearance: none;
+
+        font-size: 12px;
+
+        background: silver;
+        border: none;
+        border-left: 1px solid black;
+        border-radius: 0;
+        box-shadow:
+            inset 1px 1px #fff,
+            inset -2px -2px grey;
+        /* box-sizing: border-box; */
+        color: transparent;
+        text-shadow: 0 0 #222;
+
+        & i {
+            transform: scaleY(60%);
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        &:active {
+            box-shadow: inset 1px 1px #84888C;
+            text-shadow: 1px 1px #222;
+
+            & i {
+                transform: scaleY(60%) translateY(2px);
+            }
+        }
+    }
+
+    & .windowControlBtn {
+        float: left;
+        background: #C0C4C8;
+        border-left: none;
+        border-right: 1px solid black;
+        cursor: default;
+        margin-right: auto;
+
+        order: 0;
+
+        position: relative;
+        z-index: 1;
+
+        box-shadow: none !important;
+
+        &:active {
+            background-color: #84888C;
+
+            &::before {
+                border-color: white;
+                box-shadow: 1px 1px 0 #C0C4C8;
+                background-color: black;
+            }
+        }
+
+        &::before {
+            content: '';
+            width: 13px;
+            height: 3px;
+
+            box-shadow: 1px 1px 0 #84888C;
+            border: 1px solid black;
+            box-sizing: border-box;
+
+            background-color: white;
+        }
+    }
+
+    .windowtitle {
+        box-sizing: border-box;
+        text-align: center;
+        cursor: default;
+        font-weight: bold;
+        width: 100%;
+
+        position: absolute;
+        top: 4px;
+
+        z-index: 0;
+    }
+
+    .windowbuttons {
+        float: right;
+
+        order: 9;
+        margin-left: auto;
+
+        position: relative;
+        z-index: 1;
+
+        display: flex;
+    }
+}
+
+/* Icons */
+.icon {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+
+    &.hide {
+        display: none;
+    }
+
+    &.tempHide {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &.dragging {
+        filter: grayscale(1);
+        opacity: .5;
+
+        cursor: none;
+
+        & p {
+            opacity: 0;
+        }
+    }
+
+    & img {
+        width: 32px;
+        height: 32px;
+        image-rendering: pixelated;
+        margin-bottom: -1px;
+    }
+
+    & p {
+        margin: 0 auto;
+        padding: 2px;
+        cursor: default;
+
+        &.highlight {
+            background-color: var(--dialog-blue);
+            color: white;
+        }
+    }
+}

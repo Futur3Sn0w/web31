@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contextMenu {
+            top: 0;
+        }
+
+        .calView {
+            width: 398px;
+            height: 335px;
+
+            box-sizing: border-box;
+            border: 1px solid black;
+            overflow: hidden;
+
+            position: relative;
+
+            .current {
+                width: 100%;
+                height: 20px;
+
+                display: flex;
+
+                border-bottom: 1px solid black;
+
+                .buttons {
+                    display: flex;
+                    gap: 2px;
+                    background-color: #CBCBCB;
+
+                    button {
+                        width: 15px;
+                        height: 20px;
+                        outline: none !important;
+
+                        &.btn-L:active p {
+                            box-sizing: border-box;
+                            padding: 0;
+                            padding-bottom: 1.5px;
+                            padding-right: 2px;
+                        }
+
+                        &.btn-R:active p {
+                            box-sizing: border-box;
+                            padding: 0;
+                            padding-top: 1.5px;
+                            padding-left: 2px;
+                        }
+                    }
+                }
+
+                .time,
+                .date {
+                    display: flex;
+                    align-items: center;
+
+                    box-sizing: border-box;
+                    padding-left: 10px;
+                    padding-top: 3px;
+
+                    height: 100%;
+
+                    font-size: 13px;
+                    font-weight: bold;
+                }
+
+                .time {
+                    width: 105px;
+                }
+            }
+
+            .hourly {
+                height: calc(100% - 75px);
+
+                box-sizing: border-box;
+                padding-left: 37px;
+                padding-top: 5px;
+
+                overflow: scroll;
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 13px;
+                    font-weight: bold;
+                    width: fit-content;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    list-style: none;
+
+                    & li {
+                        width: fit-content;
+                        position: relative;
+
+                        &::after {
+                            content: attr(data-ampm);
+                            text-transform: uppercase;
+
+                            position: absolute;
+                            margin-left: 5px;
+                        }
+                    }
+
+                    & li:not(:last-of-type) {
+                        margin-bottom: 6px;
+                    }
+                }
+            }
+
+            .dailyNotes {
+                width: 100%;
+                height: 56px;
+
+                margin: 0;
+                padding: 0;
+                padding-top: 5px;
+                padding-left: 12px;
+                box-sizing: border-box;
+
+                font-size: 14px;
+                font-weight: bold;
+                font-family: 'WinThreeOne', serif;
+
+                appearance: none;
+                resize: none;
+                outline: none;
+                border: none;
+
+                border-top: 1px solid #000;
+            }
+
+            .scrollerBtns {
+                display: flex;
+                flex-direction: column;
+                height: calc(100% - 74px);
+                width: 19px;
+
+                border-left: 1px solid #000;
+                background-color: #CBCBCB;
+
+                position: absolute;
+                top: 20px;
+                right: -1px;
+
+                button {
+                    width: 20px;
+                    height: 20px;
+                    margin-left: -1px;
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contextMenu fileMenu" for="file">
+        <div class="menuItem" item="fileExit" name="Exit"></div>
+    </div>
+
+    <div class="contextMenu helpMenu" for="help">
+        <div class="menuItem" item="helpAbout" name="About Calendar..."></div>
+    </div>
+
+    <div class="calView">
+        <div class="current">
+            <div class="time">
+                <p>04:20 PM</p>
+            </div>
+            <div class="buttons">
+                <button class="small btn-L" onclick="changeDay(-1)">
+                    <p style="transform: scaleX(70%) rotate(180deg) translateY(1px);">➡</p>
+                </button>
+                <button class="small btn-R" onclick="changeDay(1)">
+                    <p style="transform: scaleX(70%);">➡</p>
+                </button>
+            </div>
+            <div class="date">
+                <p>Friday, March 14, 2025</p>
+            </div>
+        </div>
+        <div class="hourly"></div>
+        <textarea name="dailyNotes" id="dailyNotes" class="dailyNotes"></textarea>
+        <div class="scrollerBtns">
+            <button class="small scroller-a">
+                <p style="transform: scaleX(70%) rotate(270deg) translateY(1px);">➡</p>
+            </button>
+            <button class="small scroller-b" style="margin-top: auto;">
+                <p style="transform: scaleX(70%) rotate(90deg);">➡</p>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentDate = new Date(); // Store the current date
+
+        function createAgenda() {
+            const $agenda = $('.hourly');
+            const $ul = $('<ul></ul>');
+
+            for (let hour = 0; hour < 24; hour++) {
+                let displayHour = hour % 12 || 12;
+                const timeString = `${displayHour}:00`;
+                const $li = $('<li></li>').text(timeString);
+
+                if (displayHour === 12) {
+                    const ampm = hour < 12 ? 'am' : 'pm'; // Use lowercase for attribute values
+                    $li.attr('data-ampm', ampm); // Add the data-ampm attribute
+                }
+
+                $ul.append($li);
+            }
+
+            $agenda.empty().append($ul);
+        }
+
+        function updateTimeAndDate() {
+            const now = new Date();
+
+            // Format date as "Friday, March 14, 2025"
+            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+            const dayOfWeek = daysOfWeek[currentDate.getDay()];
+            const monthName = months[currentDate.getMonth()];
+            const dayOfMonth = currentDate.getDate();
+            const year = currentDate.getFullYear();
+
+            const formattedDate = `${dayOfWeek}, ${monthName} ${dayOfMonth}, ${year}`;
+
+            // Format time as HH:MM AM/PM (removed seconds)
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert to 12-hour format
+            const formattedTime = `${hours}:${minutes} ${ampm}`;
+
+            // Update the .date and .time elements
+            $('.date').text(formattedDate);
+            $('.time').text(formattedTime);
+        }
+
+        function changeDay(delta) {
+            currentDate.setDate(currentDate.getDate() + delta);
+            updateTimeAndDate();
+        }
+
+        // Update time and date every minute (no seconds)
+        setInterval(updateTimeAndDate, 60000); // 60000 milliseconds = 1 minute
+        updateTimeAndDate();
+        createAgenda();
+
+    </script>
+</body>
+
+</html>

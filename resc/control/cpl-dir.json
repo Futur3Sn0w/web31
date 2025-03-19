@@ -1,0 +1,26 @@
+{
+    "cpls": [
+        {
+            "id": "color",
+            "title": "Color",
+            "description": "Changes the Windows screen colors",
+            "windowOptions": {
+                "size": {
+                    "width": "274px",
+                    "height": "344px"
+                }
+            }
+        },
+        {
+            "id": "desktop",
+            "title": "Desktop",
+            "description": "Changes the look of your desktop",
+            "windowOptions": {
+                "size": {
+                    "width": "367px",
+                    "height": "367px"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <style>
+        body {
+            box-sizing: border-box;
+            padding: 10px;
+            background-color: #CBCBCB;
+
+            &.wide {
+                .time {
+                    color: #CBCBCB;
+                    text-shadow:
+                        -4px -4px 0 #fff,
+                        4px 4px 0 #84888C;
+                }
+            }
+        }
+
+        .clock {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            font-weight: 200;
+
+            & .time {
+                font-size: calc(8vh + 8vw);
+                width: max-content;
+            }
+
+            & .date {
+                font-size: calc(6vh + 6vw);
+            }
+        }
+    </style>
+</head>
+
+<body class="iframe">
+    <div class="contextmenu" for="settings">
+        <div class="menuItem" item="settings" name="Analog"></div>
+        <div class="menuItem" item="settings" name="Digital"></div>
+        <div class="sep"></div>
+        <div class="menuItem" item="settings" name="Set Font..."></div>
+        <div class="sep"></div>
+        <div class="menuItem" item="settings" name="No Title"></div>
+        <div class="sep"></div>
+        <div class="menuItem" item="settings" name="Seconds"></div>
+        <div class="menuItem" item="settings" name="Date"></div>
+        <div class="sep"></div>
+        <div class="menuItem" item="settings" name="About Clock..."></div>
+    </div>
+    <div class="clock">
+        <div class="time"></div>
+        <div class="date"></div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            function updateTimeAndDate() {
+                const now = new Date();
+
+                // Format date as M/DD/YY
+                const month = now.getMonth() + 1;
+                const day = now.getDate();
+                const year = now.getFullYear().toString().slice(-2);
+                const formattedDate = `${month}/${day}/${year}`;
+
+                // Format time as HH:MM:SS AM/PM
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12; // Convert to 12-hour format
+                const formattedTime = `${hours}:${minutes}:${seconds} ${ampm}`;
+
+                // Update the .date and .time elements
+                document.querySelector('.date').textContent = formattedDate;
+                document.querySelector('.time').textContent = formattedTime;
+            }
+
+            // Update time and date every second
+            setInterval(updateTimeAndDate, 1000);
+            updateTimeAndDate();
+        }
+
+        function handleWindowResize(windowElement) {
+            const windowWidth = windowElement.width();
+
+            if (windowWidth >= 400) {
+                $('body').addClass('wide');
+            } else {
+                $('body').removeClass('wide');
+            }
+        }
+
+        // Attach resize event to windows
+        $(window).on('resize', function () {
+            handleWindowResize($(this));
+        });
+    </script>
+</body>
+
+</html>

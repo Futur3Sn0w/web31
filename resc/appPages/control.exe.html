@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #control:not(.selectedwindow) .info {
+            font-size: 0 !important;
+        }
+
+        .descBar {
+            position: absolute;
+            bottom: 4px;
+
+            background-color: #CBCBCB;
+
+            height: 23px;
+            width: calc(100% - 8px);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+            border-top: 1px solid black;
+
+            & .info {
+                width: calc(100% - 16px);
+                height: 18px;
+
+                display: flex;
+                align-items: center;
+                font-size: 15px;
+
+                box-sizing: border-box;
+                padding-left: 3px;
+                box-shadow:
+                    inset -1px -1px white,
+                    inset 1px 1px #929292;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contextMenu settingsMenu" for="settings">
+        <!-- <div class="menuItem" item="settingsDesktop" name="Desktop..."></div> -->
+        <div class="sep"></div>
+        <div class="menuItem" item="settingsExit" name="Exit"></div>
+    </div>
+
+    <div class="contextMenu helpMenu" for="help">
+        <div class="menuItem" item="helpAbout" name="About Control Panel..."></div>
+    </div>
+
+    <div class="descBar">
+        <div class="info"></div>
+    </div>
+
+    <script>
+        $(document).on('click', '#control .icon', function () {
+            $('#control .descBar .info').text($('#control .icon:has(p.highlight)').attr('desc'))
+        })
+
+        setTimeout(() => {
+            $('#control .descBar .info').text($('#control .icon:has(p.highlight)').attr('desc'))
+        }, 50);
+
+        $.getJSON('resc/control/cpl-dir.json', function (data) {
+            var cpls = data.cpls;
+            var controlPanelInner = $('body').find('#control .fullwindowhtml');
+            var addedApplets = {};
+            var settingsMenu = $('.contextMenu[for="settings"]'); // Get the settings menu
+
+            cpls.forEach(function (applet) {
+                if (!addedApplets[applet.id]) {
+                    let icon = $('<div class="icon cpl" app-id="' + applet.id + '">')
+                        .html('<img src="resc/control/icons/' + applet.id + '.PNG" alt="' + applet.title + '"><p>' + applet.title + '</p>');
+                    icon.data('applet', applet);
+                    icon.attr('desc', applet.description);
+
+                    controlPanelInner.append(icon);
+                    addedApplets[applet.id] = true;
+
+                    // Create menu item for each applet
+                    let menuItem = $('<div class="menuItem" item="settings' + applet.title + '" name="' + applet.title + '..."></div>').on('mouseup', function () {
+                        $('.contextMenu').removeClass('show');
+                        createControlPanelAppletWindow(applet)
+                    });
+                    settingsMenu.prepend(menuItem); // Add menu item to the beginning of the menu
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,280 @@
+{
+    "programs": [
+        {
+            "id": "progman",
+            "title": "Program Manager",
+            "hideIcon": true,
+            "meta": true,
+            "windowOptions": {
+                "showMenuBar": true,
+                "menuItems": [
+                    "file",
+                    "options",
+                    "window",
+                    "help"
+                ],
+                "close": false,
+                "size": {
+                    "width": "calc(100% - 200px)",
+                    "height": "calc(100% - 200px)"
+                },
+                "position": {
+                    "top": "100px",
+                    "left": "100px"
+                }
+            }
+        },
+        {
+            "id": "control",
+            "title": "Control Panel",
+            "subdirectory": "Main",
+            "windowOptions": {
+                "showMenuBar": true,
+                "menuItems": [
+                    "settings",
+                    "help"
+                ],
+                "size": {
+                    "width": "430px",
+                    "height": "320px"
+                }
+            }
+        },
+        {
+            "id": "notepad",
+            "title": "Notepad",
+            "subdirectory": "Accessories",
+            "windowOptions": {
+                "showMenuBar": true,
+                "menuItems": [
+                    "file",
+                    "edit",
+                    "search",
+                    "help"
+                ]
+            }
+        },
+        {
+            "id": "calendar",
+            "title": "Calendar",
+            "subdirectory": "Accessories",
+            "embed": true,
+            "windowOptions": {
+                "showMenuBar": true,
+                "menuItems": [
+                    "file",
+                    "edit",
+                    "view",
+                    "show",
+                    "alarm",
+                    "options",
+                    "help"
+                ],
+                "size": {
+                    "width": "427px",
+                    "height": "413px"
+                }
+            }
+        },
+        {
+            "id": "calc",
+            "title": "Calculator",
+            "subdirectory": "Accessories",
+            "embed": true,
+            "windowOptions": {
+                "maximize": false,
+                "resize": false,
+                "size": {
+                    "width": "273px",
+                    "height": "269px"
+                }
+            }
+        },
+        {
+            "id": "clock",
+            "title": "Clock",
+            "subdirectory": "Accessories",
+            "embed": true,
+            "windowOptions": {
+                "showMenuBar": true,
+                "menuItems": [
+                    "settings"
+                ],
+                "size": {
+                    "width": "272px",
+                    "height": "290px"
+                }
+            }
+        },
+        {
+            "id": "regedit",
+            "title": "Registry Editor",
+            "subdirectory": "Main",
+            "windowOptions": {
+                "size": {
+                    "width": "473px",
+                    "height": "280px"
+                }
+            }
+        },
+        {
+            "id": "mplayer",
+            "title": "Media Player",
+            "subdirectory": "Accessories",
+            "windowOptions": {
+                "showMenuBar": true,
+                "resize": false,
+                "maximize": false,
+                "menuItems": [
+                    "file",
+                    "device",
+                    "scale",
+                    "help"
+                ],
+                "size": {
+                    "width": "398px",
+                    "height": "127px"
+                }
+            }
+        },
+        {
+            "id": "afterdar",
+            "title": "After Dark 3.2",
+            "subdirectory": "After-Dark",
+            "windowOptions": {
+                "resize": false,
+                "maximize": false,
+                "size": {
+                    "width": "319px",
+                    "height": "348px"
+                }
+            }
+        },
+        {
+            "id": "winski",
+            "title": "Ski-Free",
+            "subdirectory": "Games",
+            "embed": true,
+            "embedOverride": "resc/skifree/index.html",
+            "windowOptions": {
+                "resize": true,
+                "size": {
+                    "width": "776px",
+                    "height": "392px"
+                }
+            }
+        },
+        {
+            "id": "taskman",
+            "title": "Task List",
+            "hideIcon": true,
+            "meta": true,
+            "windowOptions": {
+                "static": true,
+                "minimize": false,
+                "maximize": false,
+                "size": {
+                    "width": "290px",
+                    "height": "203px"
+                },
+                "position": {
+                    "top": "calc(100% - 203px)",
+                    "left": "0"
+                }
+            }
+        },
+        {
+            "id": "run",
+            "title": "Run",
+            "hideIcon": true,
+            "meta": true,
+            "windowOptions": {
+                "static": true,
+                "resize": false,
+                "minimize": false,
+                "maximize": false,
+                "size": {
+                    "width": "378px",
+                    "height": "161px"
+                },
+                "position": {
+                    "top": "calc(50% - 80.5px)",
+                    "left": "calc(50% - 189px)"
+                }
+            }
+        },
+        {
+            "id": "winmine",
+            "title": "Minesweeper",
+            "subdirectory": "Games",
+            "embed": true,
+            "windowOptions": {
+                "showMenuBar": true,
+                "menuItems": [
+                    "game",
+                    "help"
+                ],
+                "maximize": false,
+                "resize": false,
+                "size": {
+                    "width": "218px",
+                    "height": "300px"
+                }
+            }
+        },
+        {
+            "id": "solitare",
+            "title": "Solitare",
+            "subdirectory": "Games",
+            "embed": true,
+            "windowOptions": {
+                "showMenuBar": true,
+                "resize": false,
+                "menuItems": [
+                    "game",
+                    "help"
+                ],
+                "size": {
+                    "width": "776px",
+                    "height": "392px"
+                }
+            }
+        },
+        {
+            "id": "setup",
+            "title": "Windows Setup",
+            "subdirectory": "Main",
+            "windowOptions": {
+                "maximize": false,
+                "resize": false,
+                "showMenuBar": true,
+                "menuItems": [
+                    "options",
+                    "help"
+                ],
+                "size": {
+                    "width": "387px",
+                    "height": "114px"
+                }
+            }
+        },
+        {
+            "id": "clipbrd",
+            "title": "Clipboard Viewer",
+            "subdirectory": "Main",
+            "windowOptions": {
+                "showMenuBar": true,
+                "menuItems": [
+                    "file",
+                    "edit",
+                    "display",
+                    "help"
+                ],
+                "size": {
+                    "width": "362px",
+                    "height": "253px"
+                }
+            }
+        }
+    ]
+}

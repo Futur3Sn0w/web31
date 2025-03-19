@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        .buttons-row {
+            display: flex;
+            flex-shrink: 0;
+            justify-content: center;
+            gap: 16px;
+
+            height: fit-content;
+            width: fit-content;
+
+            position: absolute;
+            bottom: 8px;
+            left: 11px;
+
+            & button {
+                height: 23px;
+                width: 70px;
+                box-sizing: border-box;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                box-shadow:
+                    inset 2px 2px 0 white,
+                    inset -2px -2px 0 #929292;
+                background-color: #CBCBCB;
+
+                border: none;
+                outline: none;
+                border-radius: 2px;
+                border: 1px solid black;
+
+                font-weight: bolder;
+                font-family: 'WinThreeOne', sans-serif;
+
+                &:focus {
+                    outline: 1px solid black;
+                }
+
+                &:active {
+                    box-shadow: inset 1px 1px #929292;
+
+                    & p {
+                        transform: translate(1px, 1px);
+                    }
+                }
+            }
+        }
+
+        .settingsGroup {
+            width: 100%;
+
+            border: 2px solid black;
+
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="settingsGroup" name="Color"></div> -->
+
+    <div class="buttons-row">
+        <button class="ok">
+            <p>OK</p>
+        </button>
+        <button class="cancel">
+            <p>Cancel</p>
+        </button>
+        <button class="help">
+            <p>Help</p>
+        </button>
+    </div>
+
+    <script>
+        $(document).on('click', '.cancel', function () {
+            $('#color').remove();
+        })
+
+        $(document).on('click', '.ok', function () {
+            $('#color').remove();
+        });
+    </script>
+</body>
+
+</html>

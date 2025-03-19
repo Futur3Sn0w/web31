@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="app.js"></script>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="globals.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <title>Windows</title>
+    <link rel="icon" type="image/svg+xml" href="resc/logo/black.svg">
+</head>
+
+<body>
+    <div class="progManMenu"></div>
+    <div class="contextMenu windowControlMenu">
+        <div class="menuItem windowMenuItem" name="Restore"></div>
+        <!-- <div class="menuItem windowMenuItem" name="Move"></div> -->
+        <!-- <div class="menuItem windowMenuItem" name="Size"></div> -->
+        <div class="menuItem windowMenuItem" name="Minimize"></div>
+        <div class="menuItem windowMenuItem" name="Maximize"></div>
+        <div class="sep"></div>
+        <div class="menuItem windowMenuItem" altkey="Ctrl+F4" name="Close"></div>
+        <!-- <div class="sep"></div> -->
+        <!-- <div class="menuItem windowMenuItem" altkey="Ctrl+F6" name="Next"></div> -->
+    </div>
+    <div class="back">
+        <div class="patternLayer"></div>
+        <div class="imgLayer"></div>
+    </div>
+    <div class="minimizedApps"></div>
+</body>
+
+</html>

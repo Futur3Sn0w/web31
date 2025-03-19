@@ -1,0 +1,113 @@
+body {
+  background-color: #008200;
+}
+
+/*
+ * Layout
+ */
+
+#btns {
+  position: absolute;
+  right: 0;
+  top: -25px;
+  width: 500px;
+  text-align: right;
+}
+
+#game {
+  width: 750px;
+  border: #000 1px solid;
+  margin: auto;
+  position: relative;
+  height: 300px;
+  margin-top: 30px;
+}
+
+button {
+  cursor: pointer;
+}
+
+#deck {
+  position: absolute;
+  left: 5px;
+  top: 10px;
+}
+
+#stacks {
+  position: absolute;
+  left: 5px;
+  bottom: 0px;
+}
+
+#slots {
+  position: absolute;
+  top: 10px;
+  right: 22px;
+}
+
+#stacks>div,
+#slots>div,
+#boxcover,
+#hand {
+  position: relative;
+  display: inline-block;
+  width: 90px;
+  height: 120px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 5px;
+  background-color: #00000011;
+  box-sizing: border-box;
+  border: 2px solid black;
+}
+
+
+
+/*
+ * Card foo
+ */
+
+.card {
+  font-size: 125px;
+  background-color: #fff;
+  position: absolute;
+  width: 75px;
+  height: 99px;
+  cursor: pointer;
+  z-index: 9001;
+  box-sizing: border-box;
+  padding: 0;
+  padding-top: 2px;
+  /* padding-right: 10px; */
+  /* lol */
+
+  margin-left: 5.5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::after {
+    /* content: ''; */
+  }
+}
+
+.spades,
+.clubs {
+  color: black;
+}
+
+.diamonds,
+.hearts {
+  color: #dd0000;
+}
+
+.card.spades:hover,
+.card.clubs:hover {
+  color: #666;
+}
+
+.card.diamonds:hover,
+.card.hearts:hover {
+  color: #ff0000;
+}

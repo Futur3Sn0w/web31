@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #regedit {
+
+            .fullwindowhtml {
+                display: flex;
+                overflow: scroll;
+                font-size: 14px !important;
+                box-sizing: border-box;
+                position: relative;
+                padding: 0;
+            }
+
+            #localStorageTree {
+                box-sizing: border-box;
+                overflow: scroll;
+
+                position: relative;
+
+                height: calc(100% - 23px);
+                width: calc(50% - 5px);
+                max-width: 300px;
+                border-right: 1px solid black;
+
+                padding: 5px;
+
+                >ul>li:first-of-type::before {
+                    opacity: 0;
+                }
+
+                & ul:has(li[data-path="HKEY_LOCAL_STORAGE\\desktop"])::after {
+                    height: 8px !important;
+                }
+
+                >ul {
+                    list-style-type: none;
+                    /* border-left: 1px solid black; */
+                    padding: 0;
+                    margin: 0;
+                    overflow: hidden;
+                    /* padding-left: 20px; */
+                    position: relative;
+                    width: max-content;
+                    margin-left: -1px;
+
+                    ul {
+                        padding: 0;
+                        margin: 0;
+                        padding-left: 10px;
+                        overflow: hidden;
+
+                        position: relative;
+
+                        &:not(.children)::after {
+                            content: '';
+                            width: 1px;
+                            height: calc(100% - 13px);
+
+                            background-color: black;
+
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                        }
+                    }
+                }
+
+                li {
+                    list-style-type: none;
+                    position: relative;
+                    z-index: 10;
+
+                    &::before {
+                        content: '';
+
+                        width: 500px;
+                        height: 1px;
+                        background-color: black;
+
+                        position: absolute;
+                        top: 7px;
+                        left: -500px;
+                    }
+
+                    &.selected {
+                        >span {
+                            color: white;
+                            background-color: var(--dialog-blue);
+                        }
+                    }
+
+                    /* &:has(.key:not(.has-children)) {
+                        display: none;
+                    } */
+                }
+
+                .key {
+                    font-weight: bold;
+                    cursor: pointer;
+
+                    box-sizing: border-box;
+                    padding: 2px;
+                    padding-right: 4px;
+
+                    display: flex;
+                    align-items: center;
+                    gap: 2px;
+
+                    &.has-children .folder-img {
+                        background-image: url("resc/appIcons/reg-closed-full.png");
+                    }
+
+                    &:not(.has-children) {
+                        display: none;
+                    }
+
+                    & .folder-img {
+                        width: 16px;
+                        height: 16px;
+                        /* background-color: orange; */
+                        background-size: 16px;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        image-rendering: pixelated;
+
+                        background-image: url("resc/appIcons/reg-closed-empty.png");
+                    }
+                }
+
+                li:not(.expanded):not(:has(.has-children)).selected .folder-img {
+                    background-image: url("resc/appIcons/reg-open-empty.png");
+                }
+
+                li.expanded>.key .folder-img {
+                    background-image: url("resc/appIcons/reg-open-empty.png");
+                }
+
+                li.expanded>.key.has-children .folder-img {
+                    background-image: url("resc/appIcons/reg-open-full.png");
+                }
+
+                .value {
+                    margin-left: 10px;
+                }
+
+                .children {
+                    display: none;
+                    border: none !important;
+                    /* Initially hide child nodes */
+                }
+
+                .expanded>.children {
+                    display: block;
+                }
+            }
+
+            .valueDisplayView {
+                box-sizing: border-box;
+                overflow: scroll;
+
+                position: relative;
+
+                height: calc(100% - 23px);
+                width: calc(100%);
+
+                border-left: 1px solid black;
+                margin-left: 3px;
+
+                overflow: scroll;
+
+                display: flex;
+                flex-direction: column;
+
+                .value-row,
+                .value-row-header {
+                    display: flex;
+                    width: 100%;
+                    height: fit-content;
+                    box-sizing: border-box;
+
+                    &.selected {
+                        background-color: var(--dialog-blue);
+                        color: white
+                    }
+
+                    &:has(.type[title="Key"]) {
+                        display: none;
+                    }
+
+                    p {
+                        padding: 0;
+                        margin: 0;
+                        box-sizing: border-box;
+
+                        display: flex;
+                        flex-grow: 0;
+                        flex-shrink: 0;
+                        width: 100%;
+                        padding-left: 5px;
+
+                        &:first-of-type,
+                        &:last-of-type {
+                            width: 40%;
+                        }
+
+                        &:last-of-type {
+                            width: max-content;
+                        }
+
+                        &:nth-of-type(2) {
+                            width: 20%;
+                        }
+                    }
+                }
+
+                .value-row-header {
+                    width: 100%;
+                    position: sticky;
+                    top: 0;
+                    left: 0;
+                    border-bottom: 1px solid black;
+
+                    p:not(:last-of-type) {
+                        border-right: 1px solid black;
+                    }
+                }
+            }
+
+            .descBar {
+                position: absolute;
+                bottom: 0;
+
+                background-color: #CBCBCB;
+
+                height: 24px;
+                width: 100%;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                box-sizing: border-box;
+                border-top: 1px solid black;
+
+                & .info {
+                    width: calc(100% - 16px);
+                    height: 19px;
+
+                    display: flex;
+                    align-items: center;
+                    font-size: 15px;
+
+                    box-sizing: border-box;
+                    padding-left: 3px;
+                    box-shadow:
+                        inset -1px -1px white,
+                        inset 1px 1px #929292;
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="localStorageTree"></div>
+
+    <div class="valueDisplayView">
+        <div class="value-row-header">
+            <p class="selected-key">Name</p>
+            <p class="selected-type">Type</p>
+            <p class="selected-value">Data</p>
+        </div>
+    </div>
+
+    <div class="descBar">
+        <div class="info path"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var localStorageTree = $("#localStorageTree");
+            var selectedElement = null;
+            var pathDisplay = $(".path");
+            var valueDisplayView = $(".valueDisplayView");
+
+            if (pathDisplay.length === 0 || valueDisplayView.length === 0) {
+                console.error("One or more required HTML elements are missing.");
+                return;
+            }
+
+            if (typeof (Storage) !== "undefined") {
+                var localStorageItems = {};
+                for (var i = 0; i < localStorage.length; i++) {
+                    var key = localStorage.key(i);
+                    var value = localStorage.getItem(key);
+                    try {
+                        localStorageItems[key] = JSON.parse(value);
+                    } catch (e) {
+                        localStorageItems[key] = value;
+                    }
+                }
+
+                // Fetch JSON data from files
+                var hkeyLocalSoftwareData = {};
+                var hkeyLocalConfigData = {};
+
+                $.getJSON("prog-dir.json", function (data) {
+                    hkeyLocalSoftwareData = data;
+                    $.getJSON("resc/control/cpl-dir.json", function (cplData) {
+                        hkeyLocalConfigData = cplData;
+                        buildAndDisplayTree();
+                    }).fail(function () {
+                        console.error("Failed to load cpl-dir.json");
+                        buildAndDisplayTree();
+                    });
+                }).fail(function () {
+                    console.error("Failed to load prog-dir.json");
+                    $.getJSON("resc/control/cpl-dir.json", function (cplData) {
+                        hkeyLocalConfigData = cplData;
+                        buildAndDisplayTree();
+                    }).fail(function () {
+                        buildAndDisplayTree();
+                    });
+                });
+
+                function buildAndDisplayTree() {
+                    var treeData = {
+                        "HKEY_LOCAL_STORAGE": localStorageItems,
+                        "HKEY_LOCAL_CONFIG": hkeyLocalConfigData,
+                        "HKEY_LOCAL_SOFTWARE": hkeyLocalSoftwareData
+                    };
+
+                    function buildTree(data, parentElement, currentPath) {
+                        var ul = $("<ul></ul>");
+                        for (var key in data) {
+                            if (data.hasOwnProperty(key)) {
+                                var value = data[key];
+                                var itemPath = currentPath ? currentPath + "\\" + key : key;
+                                var li = $("<li></li>").attr("data-path", itemPath);
+                                var keySpan = $("<span class='key'></span>").text(key).attr('title', key).prepend(`<div class='folder-img'></div>`);
+                                li.append(keySpan);
+
+                                var type = typeof value;
+                                if (type === 'object' && value !== null && !Array.isArray(value)) {
+                                    keySpan.addClass("has-children");
+                                    li.attr("data-type", 'key');
+                                    var childrenContainer = $("<ul class='children'></ul>");
+                                    buildTree(value, childrenContainer, itemPath);
+                                    li.append(childrenContainer);
+                                } else if (Array.isArray(value)) {
+                                    keySpan.addClass("has-children");
+                                    li.attr("data-type", 'key');
+                                    var childrenContainer = $("<ul class='children'></ul>");
+                                    buildTree(value, childrenContainer, itemPath);
+                                    li.append(childrenContainer);
+                                } else {
+                                    li.attr("data-value", value);
+                                    li.attr("data-type", type === 'string' && !isNaN(Number(value)) && isFinite(Number(value)) ? 'number' : type);
+                                }
+                                ul.append(li);
+                            }
+                        }
+                        parentElement.append(ul);
+                    }
+
+                    buildTree(treeData, localStorageTree, "");
+                    localStorageTree.find("ul > li:first-child > ul.children").hide();
+
+                    function capitalizeFirstLetter(string) {
+                        return string.charAt(0).toUpperCase() + string.slice(1);
+                    }
+
+                    function getValueByKey(path) {
+                        var parts = path.split("\\");
+                        var currentData = treeData;
+                        for (var i = 0; i < parts.length; i++) {
+                            if (currentData && currentData.hasOwnProperty(parts[i])) {
+                                currentData = currentData[parts[i]];
+                            } else {
+                                return undefined;
+                            }
+                        }
+                        return currentData;
+                    }
+
+                    localStorageTree.on("click", "li > span.key", function (event) {
+                        event.stopPropagation();
+
+                        if (selectedElement) {
+                            selectedElement.removeClass("selected");
+                        }
+
+                        selectedElement = $(this).parent();
+                        selectedElement.addClass("selected");
+
+                        var currentPath = selectedElement.data("path");
+                        pathDisplay.text(currentPath);
+
+                        valueDisplayView.children('.value-row').remove();
+
+                        var storedType = selectedElement.data("type");
+
+                        if (storedType === 'key') {
+                            var currentData = getValueByKey(currentPath);
+                            if (typeof currentData === 'object' && currentData !== null) {
+                                for (var childKey in currentData) {
+                                    if (currentData.hasOwnProperty(childKey)) {
+                                        var childValue = currentData[childKey];
+                                        var childType = typeof childValue;
+                                        if (childType === 'string' && !isNaN(Number(childValue)) && isFinite(Number(childValue))) {
+                                            childType = 'number';
+                                        }
+                                        if (childType === 'object') {
+                                            childType = 'Key';
+                                        }
+                                        var row = $("<div></div>").addClass("value-row");
+                                        row.append($("<p></p>").text(childKey).attr('title', childKey).addClass("name"));
+                                        row.append($("<p></p>").text(capitalizeFirstLetter(childType)).attr('title', capitalizeFirstLetter(childType)).addClass("type"));
+                                        if (typeof childValue !== 'object' && childValue !== null) {
+                                            row.append($("<p></p>").text(childValue).attr('title', childValue).addClass("value"));
+                                        }
+                                        valueDisplayView.append(row);
+                                    }
+                                }
+                            } else if (Array.isArray(currentData)) {
+                                currentData.forEach((element, index) => {
+                                    var childType = typeof element;
+                                    if (childType === 'string' && !isNaN(Number(element)) && isFinite(Number(element))) {
+                                        childType = 'number';
+                                    }
+                                    var row = $("<div></div>").addClass("value-row");
+                                    row.append($("<p></p>").text(index).attr('title', index).addClass("name"));
+                                    row.append($("<p></p>").text(capitalizeFirstLetter(childType)).attr('title', capitalizeFirstLetter(childType)).addClass("type"));
+                                    if (typeof element !== 'object' && element !== null) {
+                                        row.append($("<p></p>").text(element).attr('title', element).addClass("value"));
+                                    }
+                                    valueDisplayView.append(row);
+                                });
+                            }
+                        } else {
+                            var row = $("<div></div>").addClass("value-row");
+                            row.append($("<p></p>").text($(this).text()).attr('title', $(this).text()).addClass("name"));
+                            row.append($("<p></p>").text(capitalizeFirstLetter(storedType)).attr('title', capitalizeFirstLetter(storedType)).addClass("type"));
+                            row.append($("<p></p>").text(selectedElement.data("value")).attr('title', selectedElement.data("value")).addClass("value"));
+                            valueDisplayView.append(row);
+                        }
+                    });
+
+                    localStorageTree.on("dblclick", ".has-children", function (event) {
+                        event.stopPropagation();
+                        if ($(this).hasClass('has-children') && !$(this).parent().hasClass('expanded')) {
+                            $(this).parent().addClass("expanded");
+                            $(this).next(".children").show();
+                        } else if ($(this).hasClass('has-children') && $(this).parent().hasClass('expanded')) {
+                            $(this).parent().removeClass("expanded");
+                            $(this).next(".children").hide();
+
+                        }
+                    });
+
+                    localStorageTree.on("click", ".folder-img", function (event) {
+                        if ($(this).parent().hasClass('has-children') && !$(this).parent().parent().hasClass('expanded')) {
+                            $(this).parent().parent().addClass("expanded");
+                            $(this).parent().next(".children").show();
+                        } else if ($(this).parent().hasClass('has-children') && $(this).parent().parent().hasClass('expanded')) {
+                            $(this).parent().parent().removeClass("expanded");
+                            $(this).parent().next(".children").hide();
+
+                        }
+                    });
+                }
+
+                $(document).on('click', '.value-row:not(.value-row-header)', function () {
+                    $('.value-row').removeClass('selected');
+                    $(this).addClass('selected');
+                })
+            } else {
+                localStorageTree.append("<p>Local Storage is not supported by your browser.</p>");
+            }
+        });
+    </script>
+</body>
+
+</html>

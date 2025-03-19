@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #taskman {
+            .windowinner {
+                &::after {
+                    content: '';
+                    width: calc(100%);
+                    height: 2px;
+                    background-color: black;
+
+                    position: absolute;
+                    left: 0;
+                    bottom: 35px;
+                    z-index: 1000;
+                }
+            }
+
+            .fullwindowhtml {
+                padding: 4px;
+            }
+        }
+
+        .tasklist {
+            width: 100%;
+            height: 93px;
+
+            box-sizing: border-box;
+
+            border: 1px solid black;
+
+            & .running-app-item {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 0 1px;
+                border: 1px dotted transparent;
+
+                &.selected,
+                &:active {
+                    background-color: var(--dialog-blue);
+                    color: white;
+                    border-color: white;
+                }
+            }
+        }
+
+        &:not(:has(.selected)) {
+            button:not(.cancel, .arrangeIcons) {
+                opacity: .5;
+                pointer-events: none;
+            }
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 17px;
+
+            position: relative;
+
+            & button {
+                height: 23px;
+                width: 79px;
+                box-sizing: border-box;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                box-shadow:
+                    inset 2px 2px 0 white,
+                    inset -2px -2px 0 #929292;
+                background-color: #CBCBCB;
+
+                border: none;
+                outline: none;
+                border-radius: 2px;
+                border: 1px solid black;
+
+                font-size: 13px;
+                font-weight: bold;
+                font-family: 'WinThreeOne', sans-serif;
+
+                & p {
+                    width: max-content !important;
+                }
+
+                &:focus {
+                    outline: 1px solid black;
+                }
+
+                &:active {
+                    box-shadow: inset 1px 1px #929292;
+
+                    & p {
+                        transform: translate(1px, 1px);
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tasklist"></div>
+    <div class="buttons-row">
+        <button class="switch">
+            <p>Switch to</p>
+        </button>
+        <button class="end">
+            <p>End task</p>
+        </button>
+        <button class="cancel" style="width: 96px;">
+            <p>Cancel</p>
+        </button>
+    </div>
+    <div class="buttons-row" style="margin-top: 10px;">
+        <button class="switch" style="opacity: 0; pointer-events: none;">
+            <p>Switch to</p>
+        </button>
+        <button class="end" style="opacity: 0; pointer-events: none;">
+            <p>End task</p>
+        </button>
+        <button class="arrangeIcons" style="width: 96px;">
+            <p>Arrange Icons</p>
+        </button>
+    </div>
+
+    <script>
+        $('.cancel').on('click', function () {
+            $('#taskman').remove();
+        })
+
+        $('.switch').on('click', function () {
+            $("#" + $('.running-app-item.selected').attr('windowid')).selectWindow();
+        })
+
+        $('.end').on('click', function () {
+            $("#" + $('.running-app-item.selected').attr('windowid')).remove();
+            $('#taskman').remove();
+        })
+    </script>
+</body>
+
+</html>

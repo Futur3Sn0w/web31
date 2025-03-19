@@ -1,0 +1,328 @@
+@media (prefers-color-scheme: light) {
+    :root {
+        --svg-color: black;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --svg-color: white;
+    }
+}
+
+:root {
+    --text-color: #222222;
+    --surface: #c0c0c0;
+    --button-highlight: #ffffff;
+    --button-face: #dfdfdf;
+    --button-shadow: #808080;
+    --window-frame: #0a0a0a;
+    --dialog-blue: #000080;
+    --dialog-blue-light: #1084d0;
+    --dialog-gray: #808080;
+    --dialog-gray-light: #b5b5b5;
+    --link-blue: #0000ff;
+}
+
+/* Fonts */
+@font-face {
+    font-family: 'WinThreeOne';
+    src: url('/resc/threeone_fonts/VGASYS.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'WinThreeOne';
+    src: url('/resc/threeone_fonts/w95fa.woff2') format('woff2'),
+        url('/resc/threeone_fonts/w95fa.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'DOS';
+    src: url('/resc/threeone_fonts/LessPerfectDOSVGA.woff2') format('woff2'),
+        url('/resc/threeone_fonts/LessPerfectDOSVGA.woff') format('woff');
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    overflow: hidden;
+
+    font-family: 'WinThreeOne', sans-serif;
+    font-size: 12px;
+    text-rendering: geometricPrecision;
+    font-smooth: never;
+    -webkit-font-smoothing: never;
+    -moz-osx-font-smoothing: never;
+
+    &:has(.window#run) {
+
+        .window:not(#run),
+        .back {
+            pointer-events: none;
+        }
+    }
+
+    &:has(.window.cpl) {
+        #control {
+            pointer-events: none;
+        }
+    }
+}
+
+.ui-resizable-handle {
+    z-index: 100000000000000 !important;
+}
+
+* {
+    user-select: none;
+    outline: none;
+}
+
+img,
+* img {
+    image-rendering: pixelated;
+}
+
+
+.drag-placeholder {
+    border: 2px dotted #000;
+    opacity: .5;
+    z-index: 1000000;
+}
+
+.ui-icon-gripsmall-diagonal-se {
+    background-image: none !important;
+}
+
+/* Buttons */
+
+button {
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+    padding: 0;
+
+    box-shadow:
+        inset 2px 2px 0 white,
+        inset -2px -2px 0 #929292;
+    background-color: #CBCBCB;
+
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    border: 1px solid black;
+
+    font-size: 12px;
+    font-family: 'WinThreeOne', serif;
+
+    &.small {
+        border-radius: 0;
+        box-shadow:
+            inset 1px 1px 0 white,
+            inset -2px -2px 0 #929292;
+    }
+
+    &:focus {
+        outline: 1px solid black;
+    }
+
+    &:not([disabled]):active {
+        box-shadow: inset 1px 1px #929292;
+
+        & p {
+            transform: translate(1px, 1px);
+        }
+    }
+}
+
+/* Window and context menus */
+
+/* Menus */
+
+body.iframe .contextMenu {
+    top: 0;
+}
+
+.contextMenu {
+    position: absolute;
+    top: 44px;
+    z-index: 2000;
+
+    display: none;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    background-color: white;
+    box-shadow:
+        inset 1px 1px 0 #000,
+        1px 1px 0 #CBCBCB,
+        inset -1px -1px 0 #000;
+
+    &.show {
+        display: flex;
+    }
+
+    & .sep {
+        width: 100%;
+        height: 1px;
+        margin: 2px 0;
+        background-color: black;
+    }
+
+    & .menuItem {
+        width: calc(100% - 1px);
+        height: 19px;
+
+        display: flex;
+        align-items: center;
+        gap: 30px;
+
+        box-sizing: border-box;
+        padding: 0 15px;
+        padding-top: 2px;
+
+        font-size: 13px;
+        font-weight: bold;
+
+        &:hover {
+            background-color: var(--dialog-blue);
+            color: white;
+        }
+
+        &::after {
+            content: attr(altkey);
+            margin-left: auto;
+        }
+
+        &::before {
+            content: attr(name);
+            margin-right: auto;
+            width: max-content;
+            flex-shrink: 0;
+        }
+
+        &.disabled {
+            pointer-events: none;
+
+            &::after,
+            &::before {
+                opacity: .5;
+            }
+        }
+    }
+}
+
+.window:not(.appgroup) .windowMenuItem[name="Next"] {
+    &::before {
+        content: 'Switch to...';
+        margin-right: -17px;
+    }
+
+    &::after {
+        content: 'Ctrl+Esc';
+    }
+}
+
+.window.static .windowMenuItem[name="Maximize"],
+.window.static .windowMenuItem[name="Minimize"] {
+    display: none;
+}
+
+.windowControlMenu {
+    width: 167px;
+    height: fit-content;
+
+    top: 24px;
+    left: 4px;
+}
+
+.windowmenubar {
+    background-color: white;
+    border-bottom: 1px solid black;
+    font-size: 13px;
+    font-weight: bold;
+    height: 21px;
+    line-height: 16px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+
+    & .menuBarItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        height: 100%;
+
+        font-family: 'WinThreeOne', serif;
+
+        appearance: none;
+        background: transparent;
+        border: none;
+        outline: none;
+
+        box-sizing: border-box;
+        padding: 0px 10px;
+        padding-top: 2px;
+
+        &:active {
+            background-color: var(--dialog-blue);
+            color: white;
+        }
+    }
+}
+
+/* Checkboxes */
+
+input[type="checkbox"] {
+    appearance: none;
+    border-radius: 0;
+
+    box-sizing: border-box;
+    width: 13px;
+    height: 13px;
+
+    border: 1px solid black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    &::after,
+    &::before {
+        content: '';
+        width: 1px;
+        height: 15px;
+
+        position: absolute;
+
+        background-color: black;
+
+        opacity: 0;
+    }
+
+    &::before {
+        transform: rotate(45deg);
+    }
+
+    &::after {
+        transform: rotate(-45deg);
+    }
+
+    &:checked::before,
+    &:checked::after {
+        opacity: 1;
+    }
+}

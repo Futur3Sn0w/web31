@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #run {
+            .fullwindowhtml {
+                display: flex;
+                padding: 9px;
+                font-weight: bolder;
+            }
+        }
+
+        body {
+            display: flex;
+
+            &:has(.cmdline:placeholder-shown) {
+                .ok {
+                    pointer-events: none;
+
+                    p {
+                        opacity: .5;
+                    }
+                }
+            }
+        }
+
+        .inputArea {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 14px;
+
+            p {
+                margin: 0;
+                padding: 0;
+            }
+
+            .cmdline {
+                appearance: none;
+                outline: none;
+                border: 1px solid black;
+
+                box-sizing: border-box;
+                width: 235px;
+                height: 20px;
+
+                font-weight: bolder;
+                font-family: 'WinThreeOne', sans-serif;
+            }
+
+            .start_minimized {
+                margin-top: 15px;
+                margin-right: auto;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+
+                input {
+                    padding: 0;
+                    margin: 0;
+                    border-radius: 0;
+                }
+            }
+        }
+
+        .buttons-row {
+            display: flex;
+            flex-shrink: 0;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+
+            height: 100%;
+            width: 70px;
+
+            position: relative;
+
+            & button {
+                height: 23px;
+                width: 100%;
+                box-sizing: border-box;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                box-shadow:
+                    inset 2px 2px 0 white,
+                    inset -2px -2px 0 #929292;
+                background-color: #CBCBCB;
+
+                border: none;
+                outline: none;
+                border-radius: 2px;
+                border: 1px solid black;
+
+                font-weight: bolder;
+                font-family: 'WinThreeOne', sans-serif;
+
+                &:focus {
+                    outline: 1px solid black;
+                }
+
+                &:active {
+                    box-shadow: inset 1px 1px #929292;
+
+                    & p {
+                        transform: translate(1px, 1px);
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="inputArea">
+        <p><u>C</u>ommand line:</p>
+        <input type="text" class="cmdline" placeholder="">
+        <form class="start_minimized">
+            <input type="checkbox" class="start_minimized_check" name="start_min" id="start_min">
+            <label for="start_min">Run <u>M</u>inimized</label>
+        </form>
+    </div>
+    <div class="buttons-row">
+        <button class="ok">
+            <p>OK</p>
+        </button>
+        <button class="cancel">
+            <p>Cancel</p>
+        </button>
+        <button class="browse">
+            <p>Browse...</p>
+        </button>
+        <button class="help" style="margin-top: 6px;">
+            <p>Help</p>
+        </button>
+    </div>
+
+    <script>
+        $(document).on('click', '.cancel', function () {
+            $('#run').remove();
+        })
+
+        $(document).on('keypress', '.cmdline', function (event) {
+            if (event.which === 13 && $('.cmdline').val() !== '') { // 13 is the Enter key code
+                $('.ok').click();
+            }
+        });
+
+        $(document).on('click', '.ok', function () {
+            const appId = $('.cmdline').val();
+
+            $.getJSON('prog-dir.json', function (data) {
+                const program = data.programs.find(p => p.id === appId);
+
+                if (program) {
+                    createWindow(program);
+                    if ($('.start_minimized_check').is(':checked')) {
+                        setTimeout(() => {
+                            $('.selectedwindow').find('.minimize').click();
+                        }, 50);
+                    }
+                } else {
+                    $('#run').addClass('tempHide');
+                    setTimeout(() => {
+                        alert(`Cannot find file ${appId} (or one of its components). Check to ensure the path and filename are correct and that all required libaries are available.`);
+                        $('#run').removeClass('tempHide');
+                    }, 50);
+                }
+            }).fail(function () {
+                alert('Failed to load program data.');
+            });
+        });
+    </script>
+</body>
+
+</html>

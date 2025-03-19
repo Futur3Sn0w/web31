@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../global_window.css">
+    <link rel="stylesheet" href="../../globals.css">
+
+    <style>
+        #progman {
+            .windowMenu {
+                width: max-content !important;
+
+                .menuItem {
+                    box-sizing: border-box;
+                    width: 100% !important;
+                    padding: 0 20px;
+
+                    p {
+                        width: max-content !important;
+                    }
+                }
+
+                .menuItem.appgroup {
+                    display: flex;
+                    justify-content: flex-start;
+                    gap: 0;
+
+                    position: relative;
+
+                    &.open {
+                        & .check {
+                            display: flex;
+                        }
+                    }
+
+                    & .check {
+                        position: relative;
+                        font-size: 13px;
+                        font-weight: normal;
+                        box-sizing: border-box;
+                        padding: 2px 5px;
+                        flex-shrink: 0;
+                        margin-left: -20px;
+
+                        display: flex;
+                        order: 0;
+
+                        display: none;
+                    }
+
+                    & p {
+                        margin: 0;
+                        padding: 0;
+                        width: fit-content;
+                        margin-left: 5px;
+
+                        display: flex;
+                        order: 2;
+
+                        position: relative;
+                        /* left: 30px; */
+                    }
+
+                    &::after {
+                        display: none;
+                    }
+
+                    &::before {
+                        display: flex;
+                        margin: 0 !important;
+                        order: 1;
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+            .fullwindowhtml {
+                display: flex;
+                align-items: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contextMenu fileMenu" for="file">
+        <!-- <div class="menuItem" item="fileNew" name="New..."></div> -->
+        <!-- <div class="menuItem" item="fileOpen" name="Open" altkey="Enter"></div> -->
+        <!-- <div class="menuItem" item="fileMove" name="Move..." altkey="F7"></div> -->
+        <!-- <div class="menuItem" item="fileCopy" name="Copy..." altkey="F8"></div> -->
+        <!-- <div class="menuItem" item="fileDelete" name="Delete" altkey="Del"></div> -->
+        <!-- <div class="menuItem" item="fileProperties" name="Properties..." altkey="Alt+Enter"></div> -->
+        <!-- <div class="sep"></div> -->
+        <div class="menuItem" item="run" name="Run..."></div>
+        <div class="sep"></div>
+        <div class="menuItem" item="exitWindows" name="Exit Windows..." onmouseup="location.reload()"></div>
+    </div>
+
+    <div class="contextMenu optionsMenu" for="options">
+        <div class="menuItem" item="optionsWinWebSettings" name="Windows Web Settings..."></div>
+    </div>
+
+    <div class="contextMenu windowMenu" for="window">
+        <div class="menuItem" item="windowArrangeIcons" name="Arrange Icons"></div>
+        <div class="sep"></div>
+    </div>
+
+    <div class="contextMenu helpMenu" for="help">
+        <div class="menuItem" item="helpAbout" name="About Program Manager..."></div>
+    </div>
+
+    <script>
+        $('.menuItem[item="run"]').on('mouseup', function () {
+            $('.contextMenu').removeClass('show');
+            var program = $('.icon[app-id="run"]').data('program');
+            createWindow(program);
+        })
+
+        $('.menuItem[item="windowArrangeIcons"]').on('mouseup', function () {
+            localStorage.setItem('iconPositions', '{}')
+            location.reload();
+        })
+
+        let selWin = $('.appgroup.selectedwindow').attr('id');
+        $('.menuItem.appgroup').removeClass('open')
+        $(`.menuItem[item="window${selWin}"]`).addClass('open');
+    </script>
+</body>
+
+</html>
