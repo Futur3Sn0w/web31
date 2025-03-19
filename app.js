@@ -192,7 +192,7 @@ function setupProgMan() {
                 programs.forEach(function (program) {
                     if (program.subdirectory && !addedSubdirs[program.subdirectory]) {
                         var folderIcon = $('<div class="icon folder-icon" app-id="' + program.subdirectory + '">')
-                            .html('<img src="web31/resc/appIcons/folder.png" alt="' + program.subdirectory + '"><p>' + program.subdirectory.replace(/-/g, ' ') + '</p>');
+                            .html('<img src="./resc/appIcons/folder.png" alt="' + program.subdirectory + '"><p>' + program.subdirectory.replace(/-/g, ' ') + '</p>');
 
                         // Load position from desktop object
                         var desktop = getDesktopSettings();
@@ -241,10 +241,10 @@ function setupProgMan() {
                         let icon;
                         if (program.meta == true) {
                             icon = $('<div class="icon" app-id="' + program.id + '">')
-                                .html('<img src="web31/resc/appIcons/blank.PNG" alt="' + program.title + '"><p>' + program.title + '</p>');
+                                .html('<img src="resc/appIcons/blank.PNG" alt="' + program.title + '"><p>' + program.title + '</p>');
                         } else {
                             icon = $('<div class="icon" app-id="' + program.id + '">')
-                                .html('<img src="web31/resc/appIcons/' + program.id + '.PNG" alt="' + program.title + '"><p>' + program.title + '</p>');
+                                .html('<img src="resc/appIcons/' + program.id + '.PNG" alt="' + program.title + '"><p>' + program.title + '</p>');
                         }
                         icon.data('program', program);
 
@@ -614,7 +614,7 @@ function createSubdirectoryWindow(subdirectory) {
             programs.forEach(function (program) {
                 if (program.subdirectory === subdirectory) {
                     var icon = $('<div class="icon" app-id="' + program.id + '">')
-                        .html('<img src="web31/resc/appIcons/' + program.id + '.PNG" alt="' + program.title + '"><p>' + program.title + '</p>');
+                        .html('<img src="resc/appIcons/' + program.id + '.PNG" alt="' + program.title + '"><p>' + program.title + '</p>');
 
                     // Load position from desktop object
                     var desktop = getDesktopSettings();
