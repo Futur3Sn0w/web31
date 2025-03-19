@@ -614,7 +614,7 @@ function createSubdirectoryWindow(subdirectory) {
             programs.forEach(function (program) {
                 if (program.subdirectory === subdirectory) {
                     var icon = $('<div class="icon" app-id="' + program.id + '">')
-                        .html('<img src="resc/appIcons/' + program.id + '.PNG" alt="' + program.title + '"><p>' + program.title + '</p>');
+                        .html('<img src="web31/resc/appIcons/' + program.id + '.PNG" alt="' + program.title + '"><p>' + program.title + '</p>');
 
                     // Load position from desktop object
                     var desktop = getDesktopSettings();
