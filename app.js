@@ -192,7 +192,7 @@ function setupProgMan() {
                 programs.forEach(function (program) {
                     if (program.subdirectory && !addedSubdirs[program.subdirectory]) {
                         var folderIcon = $('<div class="icon folder-icon" app-id="' + program.subdirectory + '">')
-                            .html('<img src="/resc/appIcons/folder.png" alt="' + program.subdirectory + '"><p>' + program.subdirectory.replace(/-/g, ' ') + '</p>');
+                            .html('<img src="../resc/appIcons/folder.png" alt="' + program.subdirectory + '"><p>' + program.subdirectory.replace(/-/g, ' ') + '</p>');
 
                         // Load position from desktop object
                         var desktop = getDesktopSettings();
