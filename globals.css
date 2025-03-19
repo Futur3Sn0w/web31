@@ -27,20 +27,20 @@
 /* Fonts */
 @font-face {
     font-family: 'WinThreeOne';
-    src: url('/resc/threeone_fonts/VGASYS.ttf') format('truetype');
+    src: url('resc/threeone_fonts/VGASYS.ttf') format('truetype');
     font-weight: bold;
 }
 
 @font-face {
     font-family: 'WinThreeOne';
-    src: url('/resc/threeone_fonts/w95fa.woff2') format('woff2'),
-        url('/resc/threeone_fonts/w95fa.woff') format('woff');
+    src: url('resc/threeone_fonts/w95fa.woff2') format('woff2'),
+        url('resc/threeone_fonts/w95fa.woff') format('woff');
 }
 
 @font-face {
     font-family: 'DOS';
-    src: url('/resc/threeone_fonts/LessPerfectDOSVGA.woff2') format('woff2'),
-        url('/resc/threeone_fonts/LessPerfectDOSVGA.woff') format('woff');
+    src: url('resc/threeone_fonts/LessPerfectDOSVGA.woff2') format('woff2'),
+        url('resc/threeone_fonts/LessPerfectDOSVGA.woff') format('woff');
 }
 
 html,
@@ -100,7 +100,7 @@ img,
 
 /* Buttons */
 
-button {
+body:not(.winmine) button {
     box-sizing: border-box;
 
     display: flex;

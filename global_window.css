@@ -62,7 +62,6 @@ body {
 
 /* For Firefox */
 * {
-    scrollbar-width: thin;
     scrollbar-color: silver white;
 }
 
