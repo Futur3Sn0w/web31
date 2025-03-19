@@ -8,4 +8,5 @@ This is a pixel-for-pixel recreation of Windows 3.11- it's design and functional
 Back in the early 2000s and into the early 2010s, there was a site that recreated Windows 3.1 using web technology, and in a damn good way. The functionality was nearly spot-on, and it always filled me with joy and wonder to see such a no-barriers way to experience retro Windows.
 
 <hr>
-### more to read shortly....
+
+### We'll return after this break....
