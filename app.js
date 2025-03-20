@@ -486,7 +486,7 @@ function createWindow(program) {
         var htmlPath = 'resc/appPages/' + program.id + '.exe.html';
         if (program.embed == true) {
             if (program.embedOverride) {
-                newWindow.find('.fullwindowhtml').attr('src', program.embedOverride);
+                newWindow.find('.fullwindowhtml').attr('src', program.embedOverride + '.exe.html');
             } else {
                 newWindow.find('.fullwindowhtml').attr('src', htmlPath);
             }

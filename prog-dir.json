@@ -155,12 +155,25 @@
             "title": "Ski-Free",
             "subdirectory": "Games",
             "embed": true,
-            "embedOverride": "resc/skifree/index.html",
+            "embedOverride": "resc/skifree/winski",
             "windowOptions": {
-                "resize": true,
                 "size": {
                     "width": "776px",
                     "height": "392px"
+                }
+            }
+        },
+        {
+            "id": "windle",
+            "title": "Wordle",
+            "subdirectory": "Games",
+            "embed": true,
+            "embedOverride": "resc/windle/windle",
+            "windowOptions": {
+                "resize": false,
+                "size": {
+                    "width": "459px",
+                    "height": "312px"
                 }
             }
         },

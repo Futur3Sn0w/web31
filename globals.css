@@ -100,7 +100,7 @@ img,
 
 /* Buttons */
 
-body:not(.winmine) button {
+body:not(.winmine):not(.windle) button {
     box-sizing: border-box;
 
     display: flex;
