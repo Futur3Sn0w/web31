@@ -1,10 +1,13 @@
 # Web31 - Windows 3.1 Recreated in CSS+JS
 A pixel-for-pixel recreation of Windows 3.1- in design AND functionality- using web technologies. Utilizing real Windows assets, and carefully inspecting hundreds of sample screenshots and real Windows emulators, I've created what I hope is a faithful representation of what it was like to use Windows 3.1.  
 
+**![Big thanks](https://github.com/Futur3Sn0w/web31/wiki/Credits)** to the wonderful world of open source for bringing this project to the next level!  
+
 <img src="https://github.com/user-attachments/assets/d38341a4-ab3b-4616-a89c-27f83cc793be" width="640" />
 
 ## Using Web31
 As of writing, Web31 starts right to the Program Manager. As it's still fairly early in the process, there aren't a ton of 'programs' yet, but I've already added 3 games, some accessories, and the Desktop control panel applet which allows you to change the wallpaper and screensaver. If an app, game, or setting you're looking for isn't here yet, let me know, or give it some time and it might be added!  
+
 <img width="508" src="https://github.com/user-attachments/assets/cd37167f-460c-4628-a8da-863f50809ee7" />
 <img width="492" src="https://github.com/user-attachments/assets/609c1ea4-5930-4491-8886-6f6243911aa6" />
 <img width="497" src="https://github.com/user-attachments/assets/61b601ee-fd58-40e8-8a7e-ff5d21d9dbba" />
