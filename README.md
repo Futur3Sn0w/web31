@@ -6,7 +6,7 @@ A pixel-for-pixel recreation of Windows 3.1- in design AND functionality- using 
 <img src="https://github.com/user-attachments/assets/d38341a4-ab3b-4616-a89c-27f83cc793be" width="640" />
 
 ## Using Web31
-As of writing, Web31 starts right to the Program Manager. As it's still fairly early in the process, there aren't a ton of 'programs' yet, but I've already added 3 games, some accessories, and the Desktop control panel applet which allows you to change the wallpaper and screensaver. If an app, game, or setting you're looking for isn't here yet, let me know, or give it some time and it might be added!  
+As of writing, Web31 starts right to the Program Manager. As it's still fairly early in the process, there aren't a ton of 'programs' yet, but I've already added some games and accessories, as well as the Desktop control panel applet which allows you to change the wallpaper and screensaver. If an app, game, or setting you're looking for isn't here yet, let me know, or give it some time and it might be added!  
 
 <img width="508" src="https://github.com/user-attachments/assets/cd37167f-460c-4628-a8da-863f50809ee7" />
 <img width="492" src="https://github.com/user-attachments/assets/609c1ea4-5930-4491-8886-6f6243911aa6" />
